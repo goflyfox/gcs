@@ -1,2 +1,2 @@
-# gconfig
+# gcs
 配置管理平台
