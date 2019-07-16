@@ -4,6 +4,7 @@ import (
 	"gcs/gtoken"
 	"gcs/module/common"
 	"gcs/module/component/hook"
+	"gcs/module/config"
 	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils/base"
@@ -28,37 +29,48 @@ func bindRouter() {
 	//
 
 	// 系统路由
+	// 用户
 	userAction := new(system.UserAction)
 	g.Server().BindObject(urlPath+"/system/user", userAction)
 	g.Server().BindObjectMethod(urlPath+"/system/user/get/{id}", userAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/user/delete/{id}", userAction, "Delete")
-
+	// 部门
 	departAction := new(system.DepartmentAction)
 	g.Server().BindObject(urlPath+"/system/department", departAction)
 	g.Server().BindObjectMethod(urlPath+"/system/department/get/{id}", departAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/department/delete/{id}", departAction, "Delete")
-
+	// 日志
 	logAction := new(system.LogAction)
 	g.Server().BindObject(urlPath+"/system/log", logAction)
 	g.Server().BindObjectMethod(urlPath+"/system/log/get/{id}", logAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/log/delete/{id}", logAction, "Delete")
-
+	// 菜单
 	menuAction := new(system.MenuAction)
 	g.Server().BindObject(urlPath+"/system/menu", menuAction)
 	g.Server().BindObjectMethod(urlPath+"/system/menu/get/{id}", menuAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/menu/delete/{id}", menuAction, "Delete")
-
+	// 角色
 	roleAction := new(system.RoleAction)
 	g.Server().BindObject(urlPath+"/system/role", roleAction)
 	g.Server().BindObjectMethod(urlPath+"/system/role/get/{id}", roleAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/role/delete/{id}", roleAction, "Delete")
-
+	// 配置
 	configAction := new(system.ConfigAction)
 	g.Server().BindObject(urlPath+"/system/config", configAction)
 	g.Server().BindObjectMethod(urlPath+"/system/config/get/{id}", configAction, "Get")
 	g.Server().BindObjectMethod(urlPath+"/system/config/delete/{id}", configAction, "Delete")
+	// 项目
+	projectAction := new(config.ProjectAction)
+	g.Server().BindObject(urlPath+"/admin/project", projectAction)
+	g.Server().BindObjectMethod(urlPath+"/admin/project/get/{id}", projectAction, "Get")
+	g.Server().BindObjectMethod(urlPath+"/admin/project/delete/{id}", projectAction, "Delete")
+	// 发布
+	configPublicAction := new(config.ConfigPublicAction)
+	g.Server().BindObject(urlPath+"/admin/configpublic", configPublicAction)
+	g.Server().BindObjectMethod(urlPath+"/admin/configpublic/get/{id}", configPublicAction, "Get")
+	g.Server().BindObjectMethod(urlPath+"/admin/configpublic/delete/{id}", configPublicAction, "Delete")
 
-	authPaths := g.SliceStr{"/user/*", "/system/*"}
+	authPaths := g.SliceStr{"/user/*", "/system/*", "/admin/*"}
 
 	// 启动gtoken
 	base.Token = &gtoken.GfToken{
@@ -112,7 +124,7 @@ func initRouter() {
 	s.SetRewrite("/favicon.ico", "/resources/images/favicon.ico")
 
 	// 管理接口
-	s.EnableAdmin("/admin")
+	s.EnableAdmin("/administrator")
 
 	// 为平滑重启管理页面设置HTTP Basic账号密码
 	//s.BindHookHandler("/admin/*", ghttp.HOOK_BEFORE_SERVE, func(r *ghttp.Request) {

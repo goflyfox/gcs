@@ -1,6 +1,7 @@
 package config
 
 import (
+	"gcs/module/system"
 	"gcs/utils"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
@@ -20,7 +21,7 @@ var (
 
 // path: /index
 func (action *ConfigPublicAction) Index(r *ghttp.Request) {
-	tplFile := "pages/system/ConfigPublic_index.html"
+	tplFile := "pages/config/configpublic/configpublic_index.html"
 	err := r.Response.WriteTpl(tplFile, g.Map{
 		"now": gtime.Datetime(),
 	})
@@ -37,6 +38,31 @@ func (action *ConfigPublicAction) Get(r *ghttp.Request) {
 	if model.Id <= 0 {
 		base.Fail(r, actionNameConfigPublic+" get fail")
 	}
+
+	before := TbConfigPublic{Id: id, ProjectId: model.ProjectId}.GetBefore()
+	if before.Id <= 0 {
+		model.beforeContent = ""
+	} else {
+		model.beforeContent = before.Content
+	}
+
+	base.Succ(r, model)
+}
+
+// path: /getProject
+func (action *ConfigPublicAction) GetProject(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	user := system.SysUser{Id: userId}.Get()
+	if user.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	model := TbConfigPublic{Id: user.ProjectId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, actionNameConfigPublic+" get fail")
+	}
+
+	srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
 
 	base.Succ(r, model)
 }

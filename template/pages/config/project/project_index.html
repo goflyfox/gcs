@@ -29,15 +29,13 @@
         <!-- 这里格式不能变 -->
         <div id="jqGridEdit" style="display: none;">
             <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="vm.update([id]);">修改</a>
-            <% /**
             <a href="javascript:void(0);" class="btn btn-xs btn-danger" onclick="vm.del([id]);">删除</a>
-            **/ %>
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
 
-    ${include "project_edit.html" .}
+    ${include "pages/config/project/project_edit.html" .}
 
 </div>
 <script type="text/javascript" src="${.ctx}/resources/js/admin/project.js?t=${.now}"></script>

@@ -65,6 +65,7 @@ func LoginSubmit(r *ghttp.Request) (string, interface{}) {
 	sessionUser := bean.SessionUser{
 		Id:       model.Id,
 		Uuid:     model.Uuid,
+		UserType: model.UserType,
 		RealName: model.RealName,
 		Username: model.Username,
 	}

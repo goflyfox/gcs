@@ -1,6 +1,7 @@
 package config
 
 import (
+	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
@@ -51,6 +52,24 @@ func (model TbProject) GetOne(form *base.BaseForm) TbProject {
 	if err != nil {
 		glog.Error(model.TableName()+" get one error", err)
 		return TbProject{}
+	}
+
+	return resData
+}
+
+func (model TbProject) ListProject(userId int, userType int) []TbProject {
+	if userType == constants.UserTypeAdmin {
+		return model.List(&base.BaseForm{})
+	}
+
+	var resData []TbProject
+	err := model.dbModel("t").Fields(model.columns()).LeftJoin(
+		"sys_role_project rp", "rp.project_id = t.id ").LeftJoin(
+		"sys_user_role ur", "ur.role_id = rp.role_id ").Where(
+		"ur.user_id = ? ", userId).Structs(&resData)
+	if err != nil {
+		glog.Error(model.TableName()+" list error", err)
+		return []TbProject{}
 	}
 
 	return resData

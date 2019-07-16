@@ -1,6 +1,7 @@
 package system
 
 import (
+	"gcs/module/constants"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
 	"github.com/gogf/gf/g/database/gdb"
@@ -20,8 +21,8 @@ type SysConfig struct {
 	ParentKey    string `json:"parentKey" gconv:"parent_key,omitempty"`       //
 	Sort         int    `json:"sort" gconv:"sort,omitempty"`                  // 排序号
 	ProjectId    int    `json:"projectId" gconv:"project_id,omitempty"`       // 项目ID
-	CopyStatus   string `json:"copyStatus" gconv:"copy_status,omitempty"`     // 拷贝状态 1 拷贝  2  不拷贝
-	ChangeStatus string `json:"changeStatus" gconv:"change_status,omitempty"` // 1 不可更改 2 可以更改
+	CopyStatus   int    `json:"copyStatus" gconv:"copy_status,omitempty"`     // 拷贝状态 1 拷贝  2  不拷贝
+	ChangeStatus int    `json:"changeStatus" gconv:"change_status,omitempty"` // 1 不可更改 2 可以更改
 	// columns END
 
 	base.BaseModel
@@ -56,6 +57,32 @@ func (model SysConfig) GetOne(form *base.BaseForm) SysConfig {
 	if err != nil {
 		glog.Error(model.TableName()+" get one error", err)
 		return SysConfig{}
+	}
+
+	return resData
+}
+
+func (model SysConfig) ListByProjectId(projectId int, copyStatus bool) []*SysConfig {
+	var resData []*SysConfig
+	dbModel := model.dbModel("t").Fields(model.columns())
+	dbModel = dbModel.Where("project_id = ?", projectId)
+	dbModel = dbModel.Where("enable = ?", constants.EnableYes)
+	if copyStatus {
+		dbModel = dbModel.Where("copy_status = ?", constants.EnableYes)
+	}
+	err := dbModel.OrderBy("sort asc,`key` desc").Structs(&resData)
+	if err != nil {
+		glog.Error(model.TableName()+" list error", err)
+		return []*SysConfig{}
+	}
+	for _, data := range resData {
+		data.CreateId = 0
+		data.UpdateId = 0
+		data.Enable = 0
+		data.UpdateTime = ""
+		data.CreateTime = ""
+		data.ChangeStatus = 0
+		data.CopyStatus = 0
 	}
 
 	return resData

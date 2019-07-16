@@ -58,17 +58,13 @@ var vm = new Vue({
 
             Confirm('确定要删除选中的记录？', function () {
                 var url = dudu.ctx + "/admin/configpublic/delete/" + id;
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    success: function (result) {
-                        if (result.code === 0) {
-                            Alert('操作成功', function (index) {
-                                vm.reload();
-                            });
-                        } else {
-                            ErrorInfo(result.msg);
-                        }
+                dudu.post(url, {}, function (result) {
+                    if (result.code === 0) {
+                        Alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        ErrorInfo(result.msg);
                     }
                 });
             });
@@ -80,18 +76,13 @@ var vm = new Vue({
 
             Confirm('确定要发布数据？', function () {
                 var url = dudu.ctx + "/admin/configpublic/save";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: vm.model,
-                    success: function (result) {
-                        if (result.code === 0) {
-                            Alert('操作成功', function (index) {
-                                vm.reload();
-                            });
-                        } else {
-                            ErrorInfo(result.msg);
-                        }
+                dudu.post(url, vm.model, function (result) {
+                    if (result.code === 0) {
+                        Alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        ErrorInfo(result.msg);
                     }
                 });
             });
@@ -122,6 +113,8 @@ jQuery(function ($) {
         url: dudu.ctx + "admin/configpublic/jqgrid",
         mtype: "POST",
         styleUI: 'Bootstrap',
+        loadBeforeSend: dudu.headToken,
+        loadComplete: dudu.loadAuth,
         datatype: "json",
         colModel: [
             {label: "id", name: 'id', width: 75, hidden: true, key: true},
@@ -152,7 +145,7 @@ jQuery(function ($) {
         sortorder: 'desc',
         viewrecords: true,
         autowidth: true,
-        rowList:[20,50,100,200,500],
+        rowList: [20, 50, 100, 200, 500],
         width: 1050,
         height: 630,
         rowNum: 20,

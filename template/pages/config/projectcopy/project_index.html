@@ -81,39 +81,9 @@
 </head>
 <body>
 <div id="data_wrapper">
-    <div v-show="showList" id="showList" style="display: none;">
-        <form name="formList" action="" method="post"  class="form-inline" role="form">
-            <div class="tableSearch">
-
-                <div class="form-group">
-                    <input class="form-control" type="text" name="version" value=""
-                           placeholder="版本"/>
-                </div>
-
-                <button type="button" class="btn btn-sm btn-primary" @click="reload" name="search">
-                    <span class="glyphicon glyphicon-search"></span> 查 询
-                </button>
-                <button type="button" class="btn btn-sm btn-primary" onclick="dudu.resetForm();">
-                    <span class="glyphicon glyphicon-refresh"></span> 重 置
-                </button>
-                <button type="button" class="btn btn-sm btn-warning" @click="add">
-                    <span class="glyphicon glyphicon-plus"></span> 发 布
-                </button>
-            </div>
-        </form>
-
-        <!-- 这里格式不能变 -->
-        <div id="jqGridEdit" style="display: none;">
-            <a href="javascript:void(0);" class="btn btn-sm btn-success" onclick="vm.view([id]);">查看</a>
-        </div>
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
-    </div>
 
 
-    ${include "configpublic_edit.html" .}
-
-    ${include "configpublic_view.html" .}
+    ${include "pages/config/projectcopy/project_copy.html" .}
 
     <div style="clear:both;"></div>
     <!-- 对比信息 -->
@@ -121,6 +91,6 @@
         <div id="diffoutput" class="wrapword"> </div>
     </div>
 </div>
-<script type="text/javascript" src="${.ctx}/resources/js/admin/configpublic.js?t=${.now}"></script>
+<script type="text/javascript" src="${.ctx}/resources/js/admin/copyproject.js?t=${.now}"></script>
 </body>
 </html>

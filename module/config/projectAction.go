@@ -1,9 +1,11 @@
 package config
 
 import (
+	"gcs/module/system"
 	"gcs/utils"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
+	"github.com/gogf/gf/g/encoding/gjson"
 	"github.com/gogf/gf/g/net/ghttp"
 	"github.com/gogf/gf/g/os/glog"
 	"github.com/gogf/gf/g/os/gtime"
@@ -20,7 +22,19 @@ var (
 
 // path: /index
 func (action *ProjectAction) Index(r *ghttp.Request) {
-	tplFile := "pages/system/project_index.html"
+	tplFile := "pages/config/project/project_index.html"
+	err := r.Response.WriteTpl(tplFile, g.Map{
+		"now": gtime.Datetime(),
+	})
+
+	if err != nil {
+		glog.Error(err)
+	}
+}
+
+// path: /copy/index
+func (action *ProjectAction) Copyindex(r *ghttp.Request) {
+	tplFile := "pages/config/projectcopy/project_index.html"
 	err := r.Response.WriteTpl(tplFile, g.Map{
 		"now": gtime.Datetime(),
 	})
@@ -116,5 +130,88 @@ func (action *ProjectAction) Jqgrid(r *ghttp.Request) {
 		"rows":    page,
 		"total":   form.TotalPage,
 		"records": form.TotalSize,
+	})
+}
+
+// path: /data
+func (action *ProjectAction) Data(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := system.SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	list := TbProject{}.ListProject(model.Id, model.UserType)
+	base.Succ(r, list)
+}
+
+// path: /copy
+func (action *ProjectAction) Copy(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := system.SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	//srcProjectId := model.ProjectId
+
+	list := TbProject{}.ListProject(model.Id, model.UserType)
+	base.Succ(r, list)
+}
+
+// path: /srcProject
+func (action *ProjectAction) SrcProject(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := system.SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	srcProjectId := model.ProjectId
+	project := TbProject{Id: srcProjectId}.Get()
+	if project.Id <= 0 {
+		base.Fail(r, actionNameProject+" get fail")
+	}
+
+	base.Succ(r, project)
+}
+
+// path: /srcDestProjectInfo
+func (action *ProjectAction) SrcDestProjectInfo(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := system.SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	srcProjectId := model.ProjectId
+	srcProject := TbProject{Id: srcProjectId}.Get()
+	if srcProject.Id <= 0 {
+		base.Fail(r, actionNameProject+" get srcProject fail")
+	}
+
+	destProjectId := r.GetPostInt("destProjectId")
+	desProject := TbProject{Id: destProjectId}.Get()
+	if desProject.Id <= 0 {
+		base.Fail(r, actionNameProject+" get desProject fail")
+	}
+	srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
+	desConfigList := system.SysConfig{}.ListByProjectId(destProjectId, true)
+	for _, data := range srcConfigList {
+		data.Id = 0
+		data.ParentId = 0
+		data.ProjectId = 0
+	}
+	for _, data := range desConfigList {
+		data.Id = 0
+		data.ParentId = 0
+		data.ProjectId = 0
+	}
+
+	srcConfigStr, _ := gjson.Encode(srcConfigList)
+	desConfigStr, _ := gjson.Encode(desConfigList)
+	base.Succ(r, g.Map{
+		"srcProjectConfig":  string(srcConfigStr),
+		"destProjectConfig": string(desConfigStr),
 	})
 }

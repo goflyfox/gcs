@@ -17,8 +17,28 @@ type TbConfigPublic struct {
 	Version     string `json:"version" gconv:"version,omitempty"`          // 版本
 	Content     string `json:"content" gconv:"content,omitempty"`          // 内容
 	// columns END
+	beforeContent string `json:"beforeContent" gconv:"before_content,omitempty"` // 之前内容
 
 	base.BaseModel
+}
+
+func (model TbConfigPublic) GetBefore() TbConfigPublic {
+	if model.Id <= 0 {
+		glog.Error(model.TableName() + " get id error")
+		return TbConfigPublic{}
+	}
+
+	var resData TbConfigPublic
+	err := model.dbModel("t").Where(
+		" project_id = ?", model.ProjectId).Where(
+		" id < ?", model.Id).Fields(model.columns()).OrderBy(
+		"id desc").Limit(1).Struct(&resData)
+	if err != nil {
+		glog.Error(model.TableName()+" get one error", err)
+		return TbConfigPublic{}
+	}
+
+	return resData
 }
 
 func (model TbConfigPublic) Get() TbConfigPublic {
@@ -46,7 +66,8 @@ func (model TbConfigPublic) GetOne(form *base.BaseForm) TbConfigPublic {
 	}
 
 	var resData TbConfigPublic
-	err := model.dbModel("t").Where(where, params).Fields(model.columns()).Struct(&resData)
+	err := model.dbModel("t").Where(where, params...).Fields(
+		model.columns()).Limit(1).Struct(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" get one error", err)
 		return TbConfigPublic{}
