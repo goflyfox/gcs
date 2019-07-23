@@ -2,6 +2,7 @@ package boot
 
 import (
 	"gcs/gtoken"
+	"gcs/module/api"
 	"gcs/module/common"
 	"gcs/module/component/hook"
 	"gcs/module/config"
@@ -85,6 +86,13 @@ func bindRouter() {
 		AuthAfterFunc:    hook.AuthAfterFunc,
 	}
 	base.Token.Start()
+
+	configApiAction := new(api.ConfigApiAction)
+	g.Server().BindHookHandlerByMap("/config/api/*", map[string]ghttp.HandlerFunc{
+		ghttp.HOOK_BEFORE_SERVE: configApiAction.Auth,
+	})
+	// 对外接口
+	g.Server().BindObject(urlPath+"/config/api", configApiAction)
 }
 
 /*

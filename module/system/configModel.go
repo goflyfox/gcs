@@ -51,6 +51,10 @@ func (model SysConfig) GetOne(form *base.BaseForm) SysConfig {
 		where += " and id = ? "
 		params = append(params, gconv.Int(form.Params["id"]))
 	}
+	if form.Params != nil && form.Params["name"] != "" {
+		where += " and name = ? "
+		params = append(params, form.Params["name"])
+	}
 
 	var resData SysConfig
 	err := model.dbModel("t").Where(where, params).Fields(model.columns()).Struct(&resData)
@@ -102,7 +106,7 @@ func (model SysConfig) List(form *base.BaseForm) []SysConfig {
 
 	var resData []SysConfig
 	err := model.dbModel("t").Fields(
-		model.columns()).Where(where, params...).OrderBy(form.OrderBy).Structs(&resData)
+		model.columns()).Where(where, params).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" list error", err)
 		return []SysConfig{}
@@ -134,7 +138,7 @@ func (model SysConfig) Page(form *base.BaseForm) []SysConfig {
 		}
 	}
 
-	num, err := model.dbModel("t").Where(where, params...).Count()
+	num, err := model.dbModel("t").Where(where, params).Count()
 	form.TotalSize = num
 	form.TotalPage = num / form.Rows
 
@@ -150,7 +154,7 @@ func (model SysConfig) Page(form *base.BaseForm) []SysConfig {
 	dbModel := model.dbModel("t").Fields(model.columns() + ",su1.real_name as updateName,su2.real_name as createName")
 	dbModel = dbModel.LeftJoin("sys_user su1", " t.update_id = su1.id ")
 	dbModel = dbModel.LeftJoin("sys_user su2", " t.update_id = su2.id ")
-	err = dbModel.Where(where, params...).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
+	err = dbModel.Where(where, params).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" page list error", err)
 		return []SysConfig{}

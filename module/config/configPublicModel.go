@@ -1,6 +1,7 @@
 package config
 
 import (
+	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
@@ -65,9 +66,19 @@ func (model TbConfigPublic) GetOne(form *base.BaseForm) TbConfigPublic {
 		params = append(params, gconv.Int(form.Params["id"]))
 	}
 
+	if form.Params != nil && form.Params["name"] != "" {
+		where += " and project_name = ? "
+		params = append(params, form.Params["name"])
+
+		where += " and enable = ? "
+		params = append(params, constants.EnableYes)
+
+		form.OrderBy = "id desc"
+	}
+
 	var resData TbConfigPublic
-	err := model.dbModel("t").Where(where, params...).Fields(
-		model.columns()).Limit(1).Struct(&resData)
+	err := model.dbModel("t").Where(where, params).Fields(
+		model.columns()).OrderBy(form.OrderBy).Limit(1).Struct(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" get one error", err)
 		return TbConfigPublic{}

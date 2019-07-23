@@ -62,7 +62,7 @@ func (action *ConfigPublicAction) GetProject(r *ghttp.Request) {
 		base.Fail(r, actionNameConfigPublic+" get fail")
 	}
 
-	srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
+	//srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
 
 	base.Succ(r, model)
 }

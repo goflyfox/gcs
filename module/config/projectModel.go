@@ -46,9 +46,19 @@ func (model TbProject) GetOne(form *base.BaseForm) TbProject {
 		where += " and id = ? "
 		params = append(params, gconv.Int(form.Params["id"]))
 	}
+	if form.Params != nil && form.Params["name"] != "" {
+		where += " and project_name = ? "
+		params = append(params, form.Params["name"])
+
+		where += " and enable = ? "
+		params = append(params, constants.EnableYes)
+
+		form.OrderBy = "id desc"
+	}
 
 	var resData TbProject
-	err := model.dbModel("t").Where(where, params).Fields(model.columns()).Struct(&resData)
+	err := model.dbModel("t").Where(where, params).Fields(
+		model.columns()).Limit(1).Struct(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" get one error", err)
 		return TbProject{}

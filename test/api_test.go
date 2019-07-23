@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"gcs/module/system"
+	"github.com/gogf/gf/g/os/gfile"
 	"github.com/gogf/gf/g/os/glog"
+	"github.com/gogf/gf/g/text/gstr"
 	"github.com/gogf/gf/g/util/gconv"
 	"reflect"
 	"testing"
@@ -33,7 +35,7 @@ func TestRun(t *testing.T) {
 	params = append(params, "5")
 	params = append(params, "6")
 	foreach(params)
-	foreach(params...)
+	foreach(params)
 
 }
 
@@ -48,5 +50,27 @@ func TestReflect(t *testing.T) {
 func foreach(args ...interface{}) {
 	for _, a := range args {
 		fmt.Println("#" + gconv.String(a))
+	}
+}
+
+func TestFile(t *testing.T) {
+	gfile.CopyFile("D:\\work\\ddddd.dsdr", "D:\\work\\ddddd.dsdr.bak")
+	content := gfile.GetBinContents("D:\\work\\ddddd.dsdr.bak")
+	gfile.PutBinContents("D:\\work\\ddddd.dsdr.bak1", content)
+	array := gstr.Split(string(content), "\r\n")
+	datas := gstr.Split(array[0], ",")
+	fmt.Println(array[0])
+	fmt.Println(datas[7])
+	fmt.Println(len(content) / (1024 * 1024))
+	fmt.Println(len(array))
+
+	//for _, data := range array {
+	//	datas := gstr.Split(data, ",")
+	//	fmt.Println(datas)
+	//}
+
+	list, _ := gfile.DirNames("D:\\test")
+	for _, name := range list {
+		fmt.Println(name)
 	}
 }
