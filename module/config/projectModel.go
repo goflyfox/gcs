@@ -206,7 +206,9 @@ func (model *TbProject) Insert() int64 {
 	return res
 }
 
+// TODO 需要编写复制方法
 func (model TbProject) copyProjects(userId int, srcProjectId int, destProjectId int) {
+
 	//srcProject := TbProject{Id: srcProjectId}.Get()
 	//destProject := TbProject{Id: destProjectId}.Get()
 	//
@@ -216,6 +218,11 @@ func (model TbProject) copyProjects(userId int, srcProjectId int, destProjectId 
 	//if len(srcConfigList) == 0 {
 	//	glog.Error(model.TableName() + " srcConfigList no data")
 	//	return
+	//}
+	//
+	//srcSet := gset.New()
+	//for _, config := range srcConfigList {
+	//	srcSet.Add(config.Key)
 	//}
 
 }
