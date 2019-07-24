@@ -93,7 +93,7 @@ func (model SysMenu) List(form *base.BaseForm) []SysMenu {
 
 	var resData []SysMenu
 	err := model.dbModel("t").Fields(
-		model.columns()).Where(where, params).OrderBy(form.OrderBy).Structs(&resData)
+		model.columns()).Where(where, params...).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" list error", err)
 		return []SysMenu{}

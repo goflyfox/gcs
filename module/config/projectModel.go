@@ -47,7 +47,7 @@ func (model TbProject) GetOne(form *base.BaseForm) TbProject {
 		params = append(params, gconv.Int(form.Params["id"]))
 	}
 	if form.Params != nil && form.Params["name"] != "" {
-		where += " and project_name = ? "
+		where += " and name = ? "
 		params = append(params, form.Params["name"])
 
 		where += " and enable = ? "

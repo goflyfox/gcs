@@ -68,8 +68,11 @@ func (action *ConfigApiAction) Auth(r *ghttp.Request) {
 	}
 	resp := Auth(r, bean)
 
-	r.Response.WriteJson(resp)
-	r.ExitAll()
+	if !resp.Success() {
+		r.Response.WriteJson(resp)
+		r.ExitAll()
+	}
+
 }
 
 func Auth(r *ghttp.Request, bean ConfigBean) resp.Resp {
@@ -104,8 +107,10 @@ func Auth(r *ghttp.Request, bean ConfigBean) resp.Resp {
 	if date == nil {
 		return resp.Fail("no is illegal")
 	}
-	if math.Abs(gconv.Float64(gtime.Now().Millisecond()-date.Millisecond())) > 10*60*1000 {
-		return resp.Fail("time gt 10 minute")
+	// 1分钟
+	var diffTime float64 = 60
+	if math.Abs(gconv.Float64(gtime.Now().Second()-date.Second())) > diffTime {
+		return resp.Fail("time gt " + gconv.String(diffTime/60) + " minute (" + bean.No + ")")
 	}
 
 	form := base.NewForm(r.GetMap())

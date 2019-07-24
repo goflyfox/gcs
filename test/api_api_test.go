@@ -1,38 +1,54 @@
 package main
 
 import (
+	"github.com/gogf/gf/g/crypto/gmd5"
+	"github.com/gogf/gf/g/net/ghttp"
+	"github.com/gogf/gf/g/os/glog"
+	"github.com/gogf/gf/g/os/gtime"
+	"github.com/gogf/gf/g/text/gstr"
+	"strings"
 	"testing"
 )
 
+func TestCaa(t *testing.T) {
+	strings.Repeat(",?", -1)
+}
+
 func TestApiVersion(t *testing.T) {
-	// 登录，访问用户信息
-	//name := "test"
-	//secretKey := "12345678"
-	//no := gtime.str
-	//
-	//keyStr, err := gmd5.Encrypt(name + no + secretKey)
-	//if err != nil {
-	//	glog.Error("mac encrypt error", err)
-	//	return resp.Fail("mac encrypt error")
-	//}
-	//mac :=
-	//params := ""
-	//if r, e := ghttp.Get(TestURL + "/config/api/version" + params); e != nil {
-	//	t.Error(e)
-	//} else {
-	//	t.Log(string(r.ReadAll()))
-	//	r.Close()
-	//}
+	name := "test"
+	secretKey := "12345678"
+	no := gtime.Now().Format("YmdHis")
+
+	keyStr, err := gmd5.Encrypt(name + no + secretKey)
+	if err != nil {
+		glog.Error("mac encrypt error", err)
+	}
+	mac := gstr.ToLower(keyStr)
+	params := "?name=" + name + "&no=" + no + "&mac=" + mac
+	if r, e := ghttp.Get(TestURL + "/config/api/version" + params); e != nil {
+		t.Error(e)
+	} else {
+		t.Log(string(r.ReadAll()))
+		r.Close()
+	}
 
 }
 
 func TestApiData(t *testing.T) {
-	// 登录，访问用户信息
-	params := ""
-	data := Post(t, "/system/user/get"+params, "id=1")
-	if data.Success() {
-		t.Log(data.Json())
+	name := "test"
+	secretKey := "12345678"
+	no := gtime.Now().Format("YmdHis")
+
+	keyStr, err := gmd5.Encrypt(name + no + secretKey)
+	if err != nil {
+		glog.Error("mac encrypt error", err)
+	}
+	mac := gstr.ToLower(keyStr)
+	params := "?name=" + name + "&no=" + no + "&mac=" + mac
+	if r, e := ghttp.Get(TestURL + "/config/api/data" + params); e != nil {
+		t.Error(e)
 	} else {
-		t.Error(data.Json())
+		t.Log(string(r.ReadAll()))
+		r.Close()
 	}
 }
