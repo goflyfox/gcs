@@ -68,7 +68,7 @@ func (model SysDepartment) List(form *base.BaseForm) []SysDepartment {
 
 	var resData []SysDepartment
 	err := model.dbModel("t").Fields(
-		model.columns()).Where(where, params).OrderBy(form.OrderBy).Structs(&resData)
+		model.columns()).Where(where, params...).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" list error", err)
 		return []SysDepartment{}
@@ -90,7 +90,7 @@ func (model SysDepartment) Page(form *base.BaseForm) []SysDepartment {
 		params = append(params, "%"+form.Params["name"]+"%")
 	}
 
-	num, err := model.dbModel("t").Where(where, params).Count()
+	num, err := model.dbModel("t").Where(where, params...).Count()
 	form.TotalSize = num
 	form.TotalPage = num / form.Rows
 
@@ -107,7 +107,7 @@ func (model SysDepartment) Page(form *base.BaseForm) []SysDepartment {
 	dbModel = dbModel.LeftJoin("sys_user su1", " t.update_id = su1.id ")
 	dbModel = dbModel.LeftJoin("sys_user su2", " t.update_id = su2.id ")
 	dbModel = dbModel.LeftJoin("sys_department sdp", " sdp.id = t.parent_id ")
-	err = dbModel.Where(where, params).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
+	err = dbModel.Where(where, params...).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" page list error", err)
 		return []SysDepartment{}
