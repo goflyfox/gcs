@@ -5,6 +5,7 @@ import (
 	"gcs/utils"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
+	"github.com/gogf/gf/g/crypto/gmd5"
 	"github.com/gogf/gf/g/encoding/gjson"
 	"github.com/gogf/gf/g/net/ghttp"
 	"github.com/gogf/gf/g/os/glog"
@@ -74,7 +75,7 @@ func (action *ProjectAction) Delete(r *ghttp.Request) {
 // path: /save
 func (action *ProjectAction) Save(r *ghttp.Request) {
 	model := TbProject{}
-	err := gconv.Struct(r.GetPostMap(), &model)
+	err := gconv.StructDeep(r.GetPostMap(), &model)
 	if err != nil {
 		glog.Error(actionNameProject+" save struct error", err)
 		base.Error(r, "save error")
@@ -87,6 +88,7 @@ func (action *ProjectAction) Save(r *ghttp.Request) {
 
 	var num int64
 	if model.Id <= 0 {
+		model.SecretKey, _ = gmd5.Encrypt(utils.GetNow())
 		model.CreateId = userId
 		model.CreateTime = utils.GetNow()
 		num = model.Insert()
@@ -153,10 +155,11 @@ func (action *ProjectAction) Copy(r *ghttp.Request) {
 		base.Fail(r, "登录异常")
 	}
 
-	//srcProjectId := model.ProjectId
+	srcProjectId := model.ProjectId
+	destProjectId := r.GetInt("destProjectId")
+	TbProject{}.copyProjects(userId, srcProjectId, destProjectId)
 
-	list := TbProject{}.ListProject(model.Id, model.UserType)
-	base.Succ(r, list)
+	base.Succ(r, "")
 }
 
 // path: /srcProject
@@ -177,7 +180,7 @@ func (action *ProjectAction) SrcProject(r *ghttp.Request) {
 }
 
 // path: /srcDestProjectInfo
-func (action *ProjectAction) SrcDestProjectInfo(r *ghttp.Request) {
+func (action *ProjectAction) SrcDestProject(r *ghttp.Request) {
 	userId := base.GetUser(r).Id
 	model := system.SysUser{Id: userId}.Get()
 	if model.Id <= 0 {
@@ -190,7 +193,7 @@ func (action *ProjectAction) SrcDestProjectInfo(r *ghttp.Request) {
 		base.Fail(r, actionNameProject+" get srcProject fail")
 	}
 
-	destProjectId := r.GetPostInt("destProjectId")
+	destProjectId := r.GetInt("destProjectId")
 	desProject := TbProject{Id: destProjectId}.Get()
 	if desProject.Id <= 0 {
 		base.Fail(r, actionNameProject+" get desProject fail")

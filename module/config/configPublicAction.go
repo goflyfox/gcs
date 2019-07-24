@@ -5,6 +5,7 @@ import (
 	"gcs/utils"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
+	"github.com/gogf/gf/g/encoding/gjson"
 	"github.com/gogf/gf/g/net/ghttp"
 	"github.com/gogf/gf/g/os/glog"
 	"github.com/gogf/gf/g/os/gtime"
@@ -41,30 +42,43 @@ func (action *ConfigPublicAction) Get(r *ghttp.Request) {
 
 	before := TbConfigPublic{Id: id, ProjectId: model.ProjectId}.GetBefore()
 	if before.Id <= 0 {
-		model.beforeContent = ""
+		model.BeforeContent = ""
 	} else {
-		model.beforeContent = before.Content
+		model.BeforeContent = before.Content
 	}
 
 	base.Succ(r, model)
 }
 
-// path: /getProject
-func (action *ConfigPublicAction) GetProject(r *ghttp.Request) {
+// path: /project
+func (action *ConfigPublicAction) Project(r *ghttp.Request) {
 	userId := base.GetUser(r).Id
 	user := system.SysUser{Id: userId}.Get()
 	if user.Id <= 0 {
 		base.Fail(r, "登录异常")
 	}
 
-	model := TbConfigPublic{Id: user.ProjectId}.Get()
-	if model.Id <= 0 {
-		base.Fail(r, actionNameConfigPublic+" get fail")
+	project := TbProject{Id: user.ProjectId}.Get()
+	if project.Id <= 0 {
+		base.Fail(r, actionNameProject+" get project fail")
 	}
 
-	//srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
+	form := &base.BaseForm{Params: g.MapStrStr{"name": project.Name}}
+	configPublic := TbConfigPublic{}.GetOne(form)
+	beforeContent := ""
+	if configPublic.Id > 0 {
+		beforeContent = configPublic.Content
+	}
 
-	base.Succ(r, model)
+	srcConfigList := system.SysConfig{}.ListByProjectId(user.ProjectId, true)
+	srcConfigStr, _ := gjson.Encode(srcConfigList)
+
+	base.Succ(r, g.Map{
+		"projectId":     project.Id,
+		"projectName":   project.Name,
+		"beforeContent": beforeContent,
+		"content":       gconv.String(srcConfigStr),
+	})
 }
 
 // path: /delete/{id}
@@ -99,6 +113,14 @@ func (action *ConfigPublicAction) Save(r *ghttp.Request) {
 
 	var num int64
 	if model.Id <= 0 {
+		user := system.SysUser{Id: userId}.Get()
+		if user.Id <= 0 {
+			base.Fail(r, "登录异常")
+		}
+		model.Version = gtime.Now().Format("YmdHisu")
+		srcConfigList := system.SysConfig{}.ListByProjectId(user.ProjectId, true)
+		srcConfigStr, _ := gjson.Encode(srcConfigList)
+		model.Content = gconv.String(srcConfigStr)
 		model.CreateId = userId
 		model.CreateTime = utils.GetNow()
 		num = model.Insert()

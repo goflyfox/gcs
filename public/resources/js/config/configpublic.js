@@ -19,7 +19,7 @@ var vm = new Vue({
             diffview.diffUsingJS(0, vm.model.beforeContent, vm.model.content);
         },
         showPublicDiff: function () {
-            diffview.diffUsingJS(0, vm.model.config_before, vm.model.config);
+            diffview.diffUsingJS(0, vm.model.beforeContent, vm.model.content);
         },
         view: function (id) {
             var id = id || null;
@@ -36,10 +36,12 @@ var vm = new Vue({
 
                 vm.title = "查看发布内容";
                 vm.model = result.data;
+                vm.model.content = formatJson(vm.model.content);
+                vm.model.beforeContent = formatJson(vm.model.beforeContent);
             });
         },
         add: function () {
-            var url = dudu.ctx + "/admin/configpublic/getProject";
+            var url = dudu.ctx + "/admin/configpublic/project";
             dudu.get(url, function (result) {
                 vm.showList = false;
                 vm.showEdit = true;
@@ -47,6 +49,8 @@ var vm = new Vue({
 
                 vm.title = "配置发布";
                 vm.model = result.data;
+                vm.model.content = formatJson(vm.model.content);
+                vm.model.beforeContent = formatJson(vm.model.beforeContent);
             });
         },
         del: function (id) {
@@ -76,7 +80,10 @@ var vm = new Vue({
 
             Confirm('确定要发布数据？', function () {
                 var url = dudu.ctx + "/admin/configpublic/save";
-                dudu.post(url, vm.model, function (result) {
+                dudu.post(url, {
+                    "projectId": vm.model.projectId,
+                    "projectName": vm.model.projectName
+                }, function (result) {
                     if (result.code === 0) {
                         Alert('操作成功', function (index) {
                             vm.reload();

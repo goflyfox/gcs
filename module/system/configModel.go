@@ -1,6 +1,7 @@
 package system
 
 import (
+	"database/sql"
 	"gcs/module/constants"
 	"gcs/utils/base"
 	"github.com/gogf/gf/g"
@@ -75,7 +76,9 @@ func (model SysConfig) ListByProjectId(projectId int, copyStatus bool) []*SysCon
 		dbModel = dbModel.Where("copy_status = ?", constants.EnableYes)
 	}
 	err := dbModel.OrderBy("sort asc,`key` desc").Structs(&resData)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return []*SysConfig{}
+	} else if err != nil {
 		glog.Error(model.TableName()+" list error", err)
 		return []*SysConfig{}
 	}

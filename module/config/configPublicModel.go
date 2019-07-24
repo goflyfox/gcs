@@ -18,7 +18,7 @@ type TbConfigPublic struct {
 	Version     string `json:"version" gconv:"version,omitempty"`          // 版本
 	Content     string `json:"content" gconv:"content,omitempty"`          // 内容
 	// columns END
-	beforeContent string `json:"beforeContent" gconv:"before_content,omitempty"` // 之前内容
+	BeforeContent string `json:"beforeContent" gconv:"before_content,omitempty"` // 之前内容
 
 	base.BaseModel
 }
@@ -119,7 +119,7 @@ func (model TbConfigPublic) Page(form *base.BaseForm) []TbConfigPublic {
 		params = append(params, "%"+form.Params["name"]+"%")
 	}
 
-	num, err := model.dbModel("t").Where(where, params).Count()
+	num, err := model.dbModel("t").Where(where, params...).Count()
 	form.TotalSize = num
 	form.TotalPage = num / form.Rows
 
@@ -135,7 +135,7 @@ func (model TbConfigPublic) Page(form *base.BaseForm) []TbConfigPublic {
 	dbModel := model.dbModel("t").Fields(model.columns() + ",su1.real_name as updateName,su2.real_name as createName")
 	dbModel = dbModel.LeftJoin("sys_user su1", " t.update_id = su1.id ")
 	dbModel = dbModel.LeftJoin("sys_user su2", " t.update_id = su2.id ")
-	err = dbModel.Where(where, params).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
+	err = dbModel.Where(where, params...).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" Page list error", err)
 		return []TbConfigPublic{}

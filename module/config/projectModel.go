@@ -95,7 +95,7 @@ func (model TbProject) List(form *base.BaseForm) []TbProject {
 
 	var resData []TbProject
 	err := model.dbModel("t").Fields(
-		model.columns()).Where(where, params).OrderBy(form.OrderBy).Structs(&resData)
+		model.columns()).Where(where, params...).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" list error", err)
 		return []TbProject{}
@@ -117,7 +117,7 @@ func (model TbProject) Page(form *base.BaseForm) []TbProject {
 		params = append(params, "%"+form.Params["name"]+"%")
 	}
 
-	num, err := model.dbModel("t").Where(where, params).Count()
+	num, err := model.dbModel("t").Where(where, params...).Count()
 	form.TotalSize = num
 	form.TotalPage = num / form.Rows
 
@@ -133,7 +133,7 @@ func (model TbProject) Page(form *base.BaseForm) []TbProject {
 	dbModel := model.dbModel("t").Fields(model.columns() + ",su1.real_name as updateName,su2.real_name as createName")
 	dbModel = dbModel.LeftJoin("sys_user su1", " t.update_id = su1.id ")
 	dbModel = dbModel.LeftJoin("sys_user su2", " t.update_id = su2.id ")
-	err = dbModel.Where(where, params).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
+	err = dbModel.Where(where, params...).Limit(pageNum, pageSize).OrderBy(form.OrderBy).Structs(&resData)
 	if err != nil {
 		glog.Error(model.TableName()+" Page list error", err)
 		return []TbProject{}
@@ -204,6 +204,20 @@ func (model *TbProject) Insert() int64 {
 
 	system.LogSave(model, system.INSERT)
 	return res
+}
+
+func (model TbProject) copyProjects(userId int, srcProjectId int, destProjectId int) {
+	//srcProject := TbProject{Id: srcProjectId}.Get()
+	//destProject := TbProject{Id: destProjectId}.Get()
+	//
+	//srcConfigList := system.SysConfig{}.ListByProjectId(srcProjectId, true)
+	//desConfigList := system.SysConfig{}.ListByProjectId(destProjectId, true)
+	//
+	//if len(srcConfigList) == 0 {
+	//	glog.Error(model.TableName() + " srcConfigList no data")
+	//	return
+	//}
+
 }
 
 func (model TbProject) dbModel(alias ...string) *gdb.Model {
