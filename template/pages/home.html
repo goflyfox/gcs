@@ -54,10 +54,8 @@
             <div style="float:left;color:#fff;padding:15px 10px;">欢迎 {{user.username}}</div>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!--
                     <li><a href="javascript:;" @click="updateProject"><i class="fa fa-th-list"></i> &nbsp;修改项目({{user.projectName}})</a>
                     </li>
-                    -->
                     <li><a href="javascript:;" @click="updatePassword"><i class="fa fa-lock"></i> &nbsp;修改密码</a></li>
                     <li><a href="javascript:;" @click="logout"><i class="fa fa-sign-out"></i> &nbsp;退出系统</a></li>
                 </ul>
@@ -140,7 +138,7 @@
         </form>
     </div>
 
-    <div id="projectLayer" style="display: none;">
+    <div id="projectLayer"  style="display: none;">
         <form class="form-horizontal">
             <div class="form-group">
                 <div class="form-group">
@@ -165,6 +163,6 @@
 <script src="${.ctx}/statics/libs/bootstrap.min.js"></script>
 <script src="${.ctx}/statics/libs/app.js"></script>
 <script src="${.ctx}/statics/plugins/layer/layer.js"></script>
-<script type="text/javascript" src="${.ctx}/resources/js/home.js?t=10"></script>
+<script type="text/javascript" src="${.ctx}/resources/js/home.js?t=11"></script>
 </body>
 </html>

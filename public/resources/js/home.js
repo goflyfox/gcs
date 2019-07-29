@@ -145,20 +145,14 @@ var vm = new Vue({
                         return;
                     }
                     var data = "projectId=" + projectId;
-                    $.ajax({
-                        type: "POST",
-                        url: dudu.ctx + "/system/user/project",
-                        data: data,
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.code == 0) {
-                                layer.close(index);
-                                layer.alert('修改成功', function (index) {
-                                    location.reload();
-                                });
-                            } else {
-                                layer.alert(result.msg);
-                            }
+                    dudu.post(dudu.ctx + "/system/user/project", data, function (result) {
+                        if (result.code == 0) {
+                            layer.close(index);
+                            layer.alert('修改成功', function (index) {
+                                location.reload();
+                            });
+                        } else {
+                            layer.alert(result.msg);
                         }
                     });
                 }

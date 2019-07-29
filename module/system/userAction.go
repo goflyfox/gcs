@@ -220,6 +220,35 @@ func (action *UserAction) Password(r *ghttp.Request) {
 	base.Succ(r, "")
 }
 
+// 修改当前用户密码
+func (action *UserAction) Project(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	projectId := r.GetPostInt("projectId")
+	if projectId == 0 {
+		base.Fail(r, "参数错误")
+	}
+
+	model.UpdateId = userId
+	model.UpdateTime = utils.GetNow()
+	model.ProjectId = projectId
+	// TODO
+	//project := config.TbProject{Id: projectId}.Get()
+	// model.ProjectName = project.Name
+
+	num := model.Update()
+
+	if num <= 0 {
+		base.Fail(r, actionNameUser+" Project fail")
+	}
+
+	base.Succ(r, "")
+}
+
 // 获取当前用户信息
 func (action *UserAction) Info(r *ghttp.Request) {
 	userId := base.GetUser(r).Id
