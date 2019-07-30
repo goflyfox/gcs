@@ -218,3 +218,32 @@ func (action *ProjectAction) SrcDestProject(r *ghttp.Request) {
 		"destProjectConfig": string(desConfigStr),
 	})
 }
+
+// 修改当前用户密码
+func (action *ProjectAction) User(r *ghttp.Request) {
+	userId := base.GetUser(r).Id
+	model := system.SysUser{Id: userId}.Get()
+	if model.Id <= 0 {
+		base.Fail(r, "登录异常")
+	}
+
+	projectId := r.GetPostInt("projectId")
+	if projectId == 0 {
+		base.Fail(r, "参数错误")
+	}
+
+	model.UpdateId = userId
+	model.UpdateTime = utils.GetNow()
+	model.ProjectId = projectId
+	// TODO
+	project := TbProject{Id: projectId}.Get()
+	model.ProjectName = project.Name
+
+	num := model.Update()
+
+	if num <= 0 {
+		base.Fail(r, actionNameProject+" Project fail")
+	}
+
+	base.Succ(r, "")
+}

@@ -145,7 +145,7 @@ var vm = new Vue({
                         return;
                     }
                     var data = "projectId=" + projectId;
-                    dudu.post(dudu.ctx + "/system/user/project", data, function (result) {
+                    dudu.post(dudu.ctx + "/admin/project/user", data, function (result) {
                         if (result.code == 0) {
                             layer.close(index);
                             layer.alert('修改成功', function (index) {

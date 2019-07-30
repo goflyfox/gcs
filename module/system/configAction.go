@@ -73,6 +73,13 @@ func (action *ConfigAction) Save(r *ghttp.Request) {
 
 	var num int64
 	if model.Id <= 0 {
+		userId := base.GetUser(r).Id
+		user := SysUser{Id: userId}.Get()
+		if user.ProjectId <= 0 {
+			base.Error(r, "请选择项目")
+		}
+
+		model.ProjectId = user.ProjectId
 		model.CreateId = userId
 		model.CreateTime = utils.GetNow()
 		num = model.Insert()
@@ -108,6 +115,10 @@ func (action *ConfigAction) Page(r *ghttp.Request) {
 // path: /jqgrid
 func (action *ConfigAction) Jqgrid(r *ghttp.Request) {
 	form := base.NewForm(r.GetPostMap())
+	userId := base.GetUser(r).Id
+	user := SysUser{Id: userId}.Get()
+	form.Params["projectId"] = gconv.String(user.ProjectId)
+
 	model := SysConfig{}
 
 	page := model.Page(&form)

@@ -139,6 +139,11 @@ func (model SysConfig) Page(form *base.BaseForm) []SysConfig {
 			where += " and t.parent_id = ? "
 			params = append(params, gconv.Int(form.Params["parentId"]))
 		}
+		if gconv.Int(form.Params["projectId"]) > 0 {
+			where += " and t.project_id = ? "
+			params = append(params, gconv.Int(form.Params["projectId"]))
+		}
+
 	}
 
 	num, err := model.dbModel("t").Where(where, params...).Count()

@@ -87,6 +87,10 @@ func (model SysMenu) List(form *base.BaseForm) []SysMenu {
 		where += " and name like ? "
 		params = append(params, "%"+form.Params["name"]+"%")
 	}
+	if form.Params != nil && form.Params["level"] != "" {
+		where += " and level in (?) "
+		params = append(params, gstr.Split(form.Params["level"], ","))
+	}
 	if gstr.Trim(form.OrderBy) == "" {
 		form.OrderBy = " sort,id desc"
 	}

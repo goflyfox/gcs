@@ -96,6 +96,15 @@ func (action *MenuAction) List(r *ghttp.Request) {
 	base.Succ(r, list)
 }
 
+// path: /tree
+func (action *MenuAction) Tree(r *ghttp.Request) {
+	form := base.NewForm(r.GetPostMap())
+	model := SysMenu{}
+
+	list := model.List(&form)
+	base.Succ(r, list)
+}
+
 // path: /page
 func (action *MenuAction) Page(r *ghttp.Request) {
 	form := base.NewForm(r.GetPostMap())
