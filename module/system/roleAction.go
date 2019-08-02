@@ -144,9 +144,17 @@ func (action *RoleAction) Info(r *ghttp.Request) {
 		menuSlice = append(menuSlice, gconv.String(roleMenu.MenuId))
 	}
 
+	// 选择项目的列表
+	roleProjectList := SysRoleProject{}.List(&form)
+	projectSlice := g.SliceStr{}
+	for _, roleProject := range roleProjectList {
+		projectSlice = append(projectSlice, gconv.String(roleProject.ProjectId))
+	}
+
 	base.Succ(r, g.Map{
-		"roleId": roleId,
-		"menus":  menuSlice,
+		"roleId":   roleId,
+		"menus":    menuSlice,
+		"projects": projectSlice,
 	})
 }
 

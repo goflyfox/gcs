@@ -23,7 +23,15 @@ var menuZtree = {
                 var node = menuZtree.tree.getNodeByParam("id", menuIds[i]);
                 menuZtree.tree.checkNode(node, true, false);
             }
+
+            // 选中项目
+            // 初始化，设置被选中
+            var projectIds = r.data.projects;
+            for (var i = 0; i < projectIds.length; i++) {
+                if (projectIds[i] != '') $("[id='projectid_" + projectIds[i] + "']").attr("checked", true);
+            }
         });
+
     },
     refresh: function () {
         var url = dudu.ctx + "system/menu/list";
@@ -85,6 +93,8 @@ var vm = new Vue({
 
             // 展示菜单树
             menuZtree.refresh();
+            // 展示项目
+            vm.project();
 
             vm.title = "新增角色";
             vm.model = {
@@ -95,6 +105,20 @@ var vm = new Vue({
                 id: null
             };
         },
+        project: function() {
+            // 项目列表
+            var url = dudu.ctx + "/admin/project/data";
+            dudu.get(url, function (result) {
+                var projectList = result.data;
+                var projectLi = '';
+                for (var i = 0; i < projectList.length; i++) {
+                    projectLi += '<li class="list-group-item"><div class="checkbox"><label>';
+                    projectLi += '<input type="checkbox" name="projectid" id="projectid_' + projectList[i]["id"] + '" value="' + projectList[i]["id"] + '">&nbsp;&nbsp;&nbsp;&nbsp;' + projectList[i]["name"] + '';
+                    projectLi += '</label></div></li>';
+                }
+                $("#showEdit #project").html(projectLi);
+            });
+        },
         update: function (id) {
             var id = id || null;
             if (id == null) {
@@ -104,6 +128,8 @@ var vm = new Vue({
 
             // 展示菜单树
             menuZtree.refresh();
+            // 展示项目
+            vm.project();
 
             var url = dudu.ctx + "/system/role/get/" + id;
             dudu.get(url, function (result) {
@@ -143,7 +169,7 @@ var vm = new Vue({
                 return;
             }
 
-            //获取选择的菜单
+            // 获取选择的菜单
             var nodes = menuZtree.tree.getCheckedNodes(true);
             var menuIdArray = new Array();
             for (var i = 0; i < nodes.length; i++) {
@@ -151,6 +177,16 @@ var vm = new Vue({
             }
             var menus = menuIdArray.join(",");
             vm.model.menus = menus;
+
+            // 选中的项目
+            var projects = "";
+            $('#showEdit input[name="projectid"]:checked').each(function () {
+                projects += $(this).val() + ',';
+            });
+            if (projects != "") {
+                projects = projects.substring(0, projects.length - 1);
+            }
+            vm.model.projects = projects;
 
             var url = dudu.ctx + "/system/role/save";
             dudu.post(url, vm.model, function (result) {
