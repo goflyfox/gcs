@@ -82,6 +82,7 @@ func (model SysConfig) ListByProjectId(projectId int, copyStatus bool) []*SysCon
 		glog.Error(model.TableName()+" list error", err)
 		return []*SysConfig{}
 	}
+
 	for _, data := range resData {
 		data.CreateId = 0
 		data.UpdateId = 0

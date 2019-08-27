@@ -6,6 +6,7 @@ import (
 	"gcs/utils/resp"
 	"github.com/gogf/gf/g"
 	"github.com/gogf/gf/g/crypto/gmd5"
+	"github.com/gogf/gf/g/encoding/gjson"
 	"github.com/gogf/gf/g/net/ghttp"
 	"github.com/gogf/gf/g/os/glog"
 	"github.com/gogf/gf/g/os/gtime"
@@ -52,9 +53,16 @@ func (action *ConfigApiAction) Data(r *ghttp.Request) {
 		base.Fail(r, " get version fail")
 	}
 
+	// 转换成对象
+	dataList, err := gjson.DecodeToJson(model.Content)
+	if err != nil {
+		glog.Error("Data error", err)
+		base.Error(r, "data error")
+	}
+
 	base.Succ(r, g.Map{
 		"version": model.Version,
-		"content": model.Content,
+		"content": dataList.ToArray(),
 	})
 }
 

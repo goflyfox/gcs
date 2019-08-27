@@ -25,6 +25,7 @@ func TestApiVersion(t *testing.T) {
 	}
 	mac := gstr.ToLower(keyStr)
 	params := "?name=" + name + "&no=" + no + "&mac=" + mac
+	glog.Info(TestURL + "/config/api/version" + params)
 	if r, e := ghttp.Get(TestURL + "/config/api/version" + params); e != nil {
 		t.Error(e)
 	} else {
@@ -45,6 +46,7 @@ func TestApiData(t *testing.T) {
 	}
 	mac := gstr.ToLower(keyStr)
 	params := "?name=" + name + "&no=" + no + "&mac=" + mac
+	glog.Info(TestURL + "/config/api/data" + params)
 	if r, e := ghttp.Get(TestURL + "/config/api/data" + params); e != nil {
 		t.Error(e)
 	} else {
