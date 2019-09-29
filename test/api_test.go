@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"gcs/module/system"
-	"github.com/gogf/gf/g/os/gfile"
-	"github.com/gogf/gf/g/os/glog"
-	"github.com/gogf/gf/g/text/gstr"
-	"github.com/gogf/gf/g/util/gconv"
+	"github.com/gogf/gf/os/gfile"
+	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 	"reflect"
 	"testing"
 )

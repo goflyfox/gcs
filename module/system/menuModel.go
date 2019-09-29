@@ -3,11 +3,11 @@ package system
 import (
 	"gcs/module/constants"
 	"gcs/utils/base"
-	"github.com/gogf/gf/g"
-	"github.com/gogf/gf/g/database/gdb"
-	"github.com/gogf/gf/g/os/glog"
-	"github.com/gogf/gf/g/text/gstr"
-	"github.com/gogf/gf/g/util/gconv"
+	"github.com/gogf/gf/database/gdb"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 )
 
 type SysMenu struct {

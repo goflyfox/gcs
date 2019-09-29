@@ -5,11 +5,11 @@ import (
 	"gcs/module/constants"
 	"gcs/utils/base"
 	"gcs/utils/resp"
-	"github.com/gogf/gf/g/net/ghttp"
-	"github.com/gogf/gf/g/os/glog"
-	"github.com/gogf/gf/g/os/gtime"
-	"github.com/gogf/gf/g/text/gstr"
-	"github.com/gogf/gf/g/util/gconv"
+	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/os/gtime"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 )
 
 func CommonBefore(r *ghttp.Request) {
@@ -28,7 +28,7 @@ func LogBeforeServe(r *ghttp.Request) {
 		return
 	}
 
-	var params map[string]string
+	var params map[string]interface{}
 	if r.Method == "GET" {
 		params = r.GetQueryMap()
 	} else if r.Method == "POST" {
@@ -60,7 +60,7 @@ func LogBeforeOutput(r *ghttp.Request) {
 		r.URL.Path, "login") {
 		data = ""
 	}
-	var params map[string]string
+	var params map[string]interface{}
 	if r.Method == "GET" {
 		params = r.GetQueryMap()
 	} else if r.Method == "POST" {
@@ -71,7 +71,7 @@ func LogBeforeOutput(r *ghttp.Request) {
 	}
 
 	now := gtime.Millisecond()
-	rTime := r.GetParam("_now").Int64()
+	rTime := gconv.Int64(r.GetParam("_now"))
 	no := gconv.String(params["no"])
 	if no == "" {
 		if rTime == 0 {
@@ -96,7 +96,7 @@ func LogBeforeOutput(r *ghttp.Request) {
 
 func AuthAfterFunc(r *ghttp.Request, respData resp.Resp) {
 	if !respData.Success() {
-		var params map[string]string
+		var params map[string]interface{}
 		if r.Method == "GET" {
 			params = r.GetQueryMap()
 		} else if r.Method == "POST" {

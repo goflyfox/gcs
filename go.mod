@@ -1,3 +1,8 @@
 module gcs
 
-require github.com/gogf/gf v1.8.2
+require (
+	github.com/goflyfox/gtoken v1.3.5
+	github.com/gogf/gf v1.9.6
+)
+
+go 1.13

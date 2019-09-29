@@ -1,16 +1,17 @@
 package boot
 
 import (
-	"gcs/gtoken"
 	"gcs/module/api"
 	"gcs/module/common"
-	"gcs/module/component/hook"
+	"gcs/module/component/middle"
 	"gcs/module/config"
 	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils/base"
-	"github.com/gogf/gf/g"
-	"github.com/gogf/gf/g/net/ghttp"
+	"github.com/goflyfox/gtoken/gtoken"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
+	"strings"
 )
 
 /*
@@ -18,60 +19,63 @@ import (
 */
 func bindRouter() {
 	urlPath := g.Config().GetString("url-path")
-
+	s := g.Server()
 	// 首页
-	g.Server().BindHandler(urlPath+"/", common.Login)
-	g.Server().BindHandler(urlPath+"/main.html", common.Index)
-	g.Server().BindHandler(urlPath+"/login", common.Login)
+	s.BindHandler(urlPath+"/", common.Login)
+	s.BindHandler(urlPath+"/main.html", common.Index)
+	s.BindHandler(urlPath+"/login", common.Login)
 
-	g.Server().BindHandler(urlPath+"/admin/welcome.html", common.Welcome)
-	// 调试日志
-	//g.Server().BindObject(urlPath+"/tmp", new(adminAction.TmpAction))
-	//
+	s.BindHandler(urlPath+"/admin/welcome.html", common.Welcome)
+	// 中间件
+	s.Group(urlPath+"/", func(g *ghttp.RouterGroup) {
+		g.Middleware(middle.MiddlewareLog, middle.MiddlewareCommon)
+	})
 
-	// 系统路由
-	// 用户
-	userAction := new(system.UserAction)
-	g.Server().BindObject(urlPath+"/system/user", userAction)
-	g.Server().BindObjectMethod(urlPath+"/system/user/get/{id}", userAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/user/delete/{id}", userAction, "Delete")
-	// 部门
-	departAction := new(system.DepartmentAction)
-	g.Server().BindObject(urlPath+"/system/department", departAction)
-	g.Server().BindObjectMethod(urlPath+"/system/department/get/{id}", departAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/department/delete/{id}", departAction, "Delete")
-	// 日志
-	logAction := new(system.LogAction)
-	g.Server().BindObject(urlPath+"/system/log", logAction)
-	g.Server().BindObjectMethod(urlPath+"/system/log/get/{id}", logAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/log/delete/{id}", logAction, "Delete")
-	// 菜单
-	menuAction := new(system.MenuAction)
-	g.Server().BindObject(urlPath+"/system/menu", menuAction)
-	g.Server().BindObjectMethod(urlPath+"/system/menu/get/{id}", menuAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/menu/delete/{id}", menuAction, "Delete")
-	// 角色
-	roleAction := new(system.RoleAction)
-	g.Server().BindObject(urlPath+"/system/role", roleAction)
-	g.Server().BindObjectMethod(urlPath+"/system/role/get/{id}", roleAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/role/delete/{id}", roleAction, "Delete")
-	// 配置
-	configAction := new(system.ConfigAction)
-	g.Server().BindObject(urlPath+"/system/config", configAction)
-	g.Server().BindObjectMethod(urlPath+"/system/config/get/{id}", configAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/system/config/delete/{id}", configAction, "Delete")
-	// 项目
-	projectAction := new(config.ProjectAction)
-	g.Server().BindObject(urlPath+"/admin/project", projectAction)
-	g.Server().BindObjectMethod(urlPath+"/admin/project/get/{id}", projectAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/admin/project/delete/{id}", projectAction, "Delete")
-	// 发布
-	configPublicAction := new(config.ConfigPublicAction)
-	g.Server().BindObject(urlPath+"/admin/configpublic", configPublicAction)
-	g.Server().BindObjectMethod(urlPath+"/admin/configpublic/get/{id}", configPublicAction, "Get")
-	g.Server().BindObjectMethod(urlPath+"/admin/configpublic/delete/{id}", configPublicAction, "Delete")
+	s.Group(urlPath+"/system", func(g *ghttp.RouterGroup) {
+		// 系统路由
+		userAction := new(system.UserAction)
+		g.ALL("user", userAction)
+		g.GET("/user/get/{id}", userAction.Get)
+		g.ALL("user/delete/{id}", userAction.Delete)
 
-	authPaths := g.SliceStr{"/user/*", "/system/*", "/admin/*"}
+		departAction := new(system.DepartmentAction)
+		g.ALL("department", departAction)
+		g.GET("/department/get/{id}", departAction.Get)
+		g.ALL("/department/delete/{id}", departAction.Delete)
+
+		logAction := new(system.LogAction)
+		g.ALL("log", logAction)
+		g.GET("/log/get/{id}", logAction.Get)
+		g.ALL("/log/delete/{id}", logAction.Delete)
+
+		menuAction := new(system.MenuAction)
+		g.ALL("menu", menuAction)
+		g.GET("/menu/get/{id}", menuAction.Get)
+		g.ALL("/menu/delete/{id}", menuAction.Delete)
+
+		roleAction := new(system.RoleAction)
+		g.ALL("role", roleAction)
+		g.GET("/role/get/{id}", roleAction.Get)
+		g.ALL("/role/delete/{id}", roleAction.Delete)
+
+		configAction := new(system.ConfigAction)
+		g.ALL("config", configAction)
+		g.GET("/config/get/{id}", configAction.Get)
+		g.ALL("/config/delete/{id}", configAction.Delete)
+	})
+
+	s.Group(urlPath+"/admin", func(g *ghttp.RouterGroup) {
+		// 项目
+		projectAction := new(config.ProjectAction)
+		g.ALL(urlPath+"/project", projectAction)
+		g.GET(urlPath+"/project/get/{id}", projectAction, "Get")
+		g.ALL(urlPath+"/project/delete/{id}", projectAction, "Delete")
+		// 发布
+		configPublicAction := new(config.ConfigPublicAction)
+		g.ALL(urlPath+"/configpublic", configPublicAction)
+		g.GET(urlPath+"/configpublic/get/{id}", configPublicAction, "Get")
+		g.ALL(urlPath+"/configpublic/delete/{id}", configPublicAction, "Delete")
+	})
 
 	// 启动gtoken
 	base.Token = &gtoken.GfToken{
@@ -81,9 +85,19 @@ func bindRouter() {
 		LoginBeforeFunc:  common.LoginSubmit,
 		LogoutPath:       "/user/logout",
 		LogoutBeforeFunc: common.LogoutBefore,
-		AuthPaths:        authPaths,
-		AuthBeforeFunc:   hook.AuthBeforeFunc,
-		AuthAfterFunc:    hook.AuthAfterFunc,
+		AuthPaths:        g.SliceStr{"/user", "/system", "/admin"},
+		AuthBeforeFunc: func(r *ghttp.Request) bool {
+			// 静态页面不拦截
+			if r.IsFileRequest() {
+				return false
+			}
+
+			if strings.HasSuffix(r.URL.Path, "index") {
+				return false
+			}
+
+			return true
+		},
 	}
 	base.Token.Start()
 
@@ -101,15 +115,6 @@ func bindRouter() {
 func initRouter() {
 
 	s := g.Server()
-
-	//// 通用设置
-	s.BindHookHandler("/*any", ghttp.HOOK_BEFORE_SERVE, hook.CommonBefore)
-
-	// 日志拦截
-	s.BindHookHandlerByMap("/*any", map[string]ghttp.HandlerFunc{
-		ghttp.HOOK_BEFORE_SERVE: hook.LogBeforeServe,
-		ghttp.HOOK_AFTER_SERVE:  hook.LogBeforeOutput,
-	})
 
 	// 绑定路由
 	bindRouter()

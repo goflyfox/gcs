@@ -2,9 +2,9 @@ package boot
 
 import (
 	"gcs/module/component/started"
-	"github.com/gogf/gf/g"
-	"github.com/gogf/gf/g/net/ghttp"
-	"github.com/gogf/gf/g/os/glog"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/glog"
 )
 
 // 管理初始化顺序.
@@ -34,7 +34,7 @@ func initConfig() {
 	glog.SetStdoutPrint(true)
 
 	s.SetServerRoot("public")
-	s.SetNameToUriType(ghttp.NAME_TO_URI_TYPE_ALLLOWER)
+	s.SetNameToUriType(ghttp.URI_TYPE_ALLLOWER)
 	s.SetLogPath(logPath)
 	s.SetErrorLogEnabled(true)
 	//s.SetAccessLogEnabled(true)

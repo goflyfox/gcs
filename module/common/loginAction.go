@@ -6,10 +6,10 @@ import (
 	"gcs/utils"
 	"gcs/utils/base"
 	"gcs/utils/bean"
-	"github.com/gogf/gf/g"
-	"github.com/gogf/gf/g/crypto/gmd5"
-	"github.com/gogf/gf/g/net/ghttp"
-	"github.com/gogf/gf/g/os/glog"
+	"github.com/gogf/gf/crypto/gmd5"
+	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/glog"
 )
 
 // Login 登录页面
