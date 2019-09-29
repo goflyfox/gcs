@@ -92,7 +92,8 @@ func bindRouter() {
 				return false
 			}
 
-			if strings.HasSuffix(r.URL.Path, "index") {
+			if strings.HasSuffix(r.URL.Path, "index") ||
+				strings.HasSuffix(r.URL.Path, ".html") {
 				return false
 			}
 
@@ -101,12 +102,15 @@ func bindRouter() {
 	}
 	base.Token.Start()
 
-	configApiAction := new(api.ConfigApiAction)
-	g.Server().BindHookHandlerByMap("/config/api/*", map[string]ghttp.HandlerFunc{
-		ghttp.HOOK_BEFORE_SERVE: configApiAction.Auth,
-	})
 	// 对外接口
-	g.Server().BindObject(urlPath+"/config/api", configApiAction)
+	s.Group(urlPath+"/config/api", func(g *ghttp.RouterGroup) {
+		g.Middleware(middle.MiddlewareApiAuth)
+
+		// 版本和数据接口
+		configApiAction := new(api.ConfigApiAction)
+		g.ALL("/", configApiAction)
+	})
+
 }
 
 /*

@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/text/gstr"
 	"testing"
 )
 
@@ -19,7 +20,15 @@ func TestSystemConfigIndex(t *testing.T) {
 	if r, e := ghttp.Get(TestURL + "/system/config/index"); e != nil {
 		t.Error(e)
 	} else {
-		t.Log(string(r.ReadAll()))
+		content := string(r.ReadAll())
+		if r.StatusCode != 200 {
+			t.Error("content error", content)
+		} else if gstr.Contains(content, "code") && gstr.Contains(content, "msg") {
+			t.Error("content code error", content)
+		} else {
+			t.Log("index page no auth")
+		}
+
 		r.Close()
 	}
 
@@ -65,7 +74,7 @@ func TestLogout(t *testing.T) {
 func Post(t *testing.T, urlPath string, data ...interface{}) resp.Resp {
 	client := ghttp.NewClient()
 	client.SetHeader("Authorization", "Bearer "+getToken(t))
-	content := client.DoRequestContent("POST", TestURL+urlPath, data...)
+	content := client.RequestContent("POST", TestURL+urlPath, data...)
 	var respData resp.Resp
 	err := json.Unmarshal([]byte(content), &respData)
 	if err != nil {

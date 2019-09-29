@@ -1,4 +1,4 @@
-package main
+package other_test
 
 import (
 	"fmt"
@@ -55,8 +55,8 @@ func foreach(args ...interface{}) {
 
 func TestFile(t *testing.T) {
 	gfile.CopyFile("D:\\work\\ddddd.dsdr", "D:\\work\\ddddd.dsdr.bak")
-	content := gfile.GetBinContents("D:\\work\\ddddd.dsdr.bak")
-	gfile.PutBinContents("D:\\work\\ddddd.dsdr.bak1", content)
+	content := gfile.GetBytes("D:\\work\\ddddd.dsdr.bak")
+	gfile.PutBytes("D:\\work\\ddddd.dsdr.bak1", content)
 	array := gstr.Split(string(content), "\r\n")
 	datas := gstr.Split(array[0], ",")
 	fmt.Println(array[0])

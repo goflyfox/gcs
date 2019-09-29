@@ -1,4 +1,4 @@
-package main
+package other_test
 
 import (
 	"github.com/gogf/gf/net/ghttp"
