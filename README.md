@@ -43,25 +43,25 @@ cache-mode = 2
 #### 平台截图
 
 登录：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/1.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/1.png)
 
 配置管理：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g1.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/g1.png)
 
 配置发布：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g2.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/g2.png)
 
 配置对比：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g3.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/g3.png)
 
 组织机构：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/2.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/2.png)
 
 用户管理：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/3.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/3.png)
 
 日志管理：
-![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/4.png)
+![image](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/image/4.png)
 
 #### 感谢
 
