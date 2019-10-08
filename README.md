@@ -42,7 +42,7 @@ cache-mode = 2
 6. 其他：组织机构管理、用户管理、角色管理、菜单管理、日志管理
 
 #### 对外接口
-[配置平台接口](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/api.md "配置平台接口")
+[配置平台接口](https://github.com/goflyfox/gcs/blob/master/deploy/api.md "配置平台接口")
 
 #### 平台截图
 
