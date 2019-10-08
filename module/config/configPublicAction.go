@@ -71,7 +71,18 @@ func (action *ConfigPublicAction) Project(r *ghttp.Request) {
 	}
 
 	srcConfigList := system.SysConfig{}.ListByProjectId(user.ProjectId, true)
-	srcConfigStr, _ := gjson.Encode(srcConfigList)
+	// 去除无用字段
+	dataList := g.List{}
+	for _, data := range srcConfigList {
+		dataList = append(dataList, g.Map{
+			"name":      data.Name,
+			"key":       data.Key,
+			"value":     data.Value,
+			"code":      data.Code,
+			"parentKey": data.ParentKey,
+		})
+	}
+	srcConfigStr, _ := gjson.Encode(dataList)
 
 	base.Succ(r, g.Map{
 		"projectId":     project.Id,

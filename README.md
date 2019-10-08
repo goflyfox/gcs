@@ -19,6 +19,19 @@ gcs(go config server) 配置管理平台,此项目基于gf框架开发，支持�
 4. `go build && go run main.go`
 5. 访问http://localhost即可看到登录页面，账号/密码：admin/123456
 
+#### 其他配置
+
+1. 如果使用集群，可以开启redis token模式；配置如下：
+```toml
+# 缓存模式 1 gcache 2 gredis
+cache-mode = 2
+
+# Redis数据库配置
+[redis]
+  default = "127.0.0.1:16379,0,soccer"
+  cache   = "127.0.0.1:16379,1,soccer?idleTimeout=600"
+```
+
 #### 功能模块
 
 1. 登录、认证、登出
@@ -31,6 +44,15 @@ gcs(go config server) 配置管理平台,此项目基于gf框架开发，支持�
 
 登录：
 ![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/1.png)
+
+配置管理：
+![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g1.png)
+
+配置发布：
+![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g2.png)
+
+配置对比：
+![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/g3.png)
 
 组织机构：
 ![image](https://raw.githubusercontent.com/goflyfox/gmanager/master/deploy/image/2.png)

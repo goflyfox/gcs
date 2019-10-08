@@ -52,4 +52,5 @@ func TestLogMysql(t *testing.T) {
 		t.Log(string(r.ReadAll()))
 		r.Close()
 	}
+
 }
