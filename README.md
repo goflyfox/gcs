@@ -41,6 +41,9 @@ cache-mode = 2
 5. 支持菜单权限及项目权限配置
 6. 其他：组织机构管理、用户管理、角色管理、菜单管理、日志管理
 
+#### 对外接口
+[配置平台接口](https://raw.githubusercontent.com/goflyfox/gcs/master/deploy/api.md "配置平台接口")
+
 #### 平台截图
 
 登录：
