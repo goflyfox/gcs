@@ -33,9 +33,12 @@ func SetexMap(cacheKey string, data g.Map, timeout int) resp.Resp {
 // GetMap 获取缓存
 func GetMap(cacheKey string) resp.Resp {
 	data := Get(cacheKey)
+	if !data.Success() {
+		return data
+	}
 
 	var dataMap g.Map
-	err := gjson.DecodeTo(data, &dataMap)
+	err := gjson.DecodeTo(data.Data, &dataMap)
 	if err != nil {
 		glog.Error("[Cache]cache get json error", err)
 		return resp.Error("cache get json error")
