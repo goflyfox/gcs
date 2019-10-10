@@ -21,10 +21,10 @@ func Debug(r *ghttp.Request) {
 	if constants.DEBUG {
 		constants.DEBUG = false
 		g.DB().SetDebug(false)
-		r.Response.Writeln("debug close ~!~ ")
+		r.Response.Write("debug close ~!~ ")
 	} else {
 		constants.DEBUG = true
 		g.DB().SetDebug(true)
-		r.Response.Writeln("debug open ~!~ ")
+		r.Response.Write("debug open ~!~ ")
 	}
 }

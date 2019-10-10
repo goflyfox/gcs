@@ -91,13 +91,13 @@ func Auth(r *ghttp.Request, bean api.ConfigBean) resp.Resp {
 }
 
 func getPublicCache(r *ghttp.Request) config.TbProject {
-	resp := cache.GetMap(constants.CacheProjectInfoKey)
+	form := base.NewForm(r.GetMap())
+	resp := cache.GetMap(constants.CacheProjectInfoKey + form.Params["name"])
 	var project config.TbProject
 	if resp.Success() {
 		project = config.TbProject{}
 		gconv.Struct(resp.Data, &project)
 	} else {
-		form := base.NewForm(r.GetMap())
 		project = config.TbProject{}.GetOne(&form)
 		cache.SetexMap(constants.CacheProjectInfoKey+project.Name, gconv.Map(project), constants.CacheTimeOut)
 	}
