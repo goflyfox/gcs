@@ -1,9 +1,11 @@
 package config
 
 import (
+	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils"
 	"gcs/utils/base"
+	"gcs/utils/cache"
 	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
@@ -69,6 +71,9 @@ func (action *ProjectAction) Delete(r *ghttp.Request) {
 		base.Fail(r, actionNameProject+" delete fail")
 	}
 
+	// 删除缓存
+	cache.Del(constants.CacheProjectInfoKey + model.Name)
+
 	base.Succ(r, "")
 }
 
@@ -99,6 +104,8 @@ func (action *ProjectAction) Save(r *ghttp.Request) {
 	if num <= 0 {
 		base.Fail(r, actionNameProject+" save fail")
 	}
+	// 加入缓存
+	cache.SetexMap(constants.CacheProjectInfoKey+model.Name, gconv.Map(model), constants.CacheTimeOut)
 
 	base.Succ(r, "")
 }

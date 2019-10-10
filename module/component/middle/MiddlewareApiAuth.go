@@ -3,7 +3,9 @@ package middle
 import (
 	"gcs/module/api"
 	"gcs/module/config"
+	"gcs/module/constants"
 	"gcs/utils/base"
+	"gcs/utils/cache"
 	"gcs/utils/resp"
 	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/net/ghttp"
@@ -70,9 +72,7 @@ func Auth(r *ghttp.Request, bean api.ConfigBean) resp.Resp {
 		return resp.Fail("time gt " + gconv.String(diffTime/60) + " minute (" + bean.No + ")")
 	}
 
-	form := base.NewForm(r.GetMap())
-
-	project := config.TbProject{}.GetOne(&form)
+	project := getPublicCache(r)
 	if project.Id <= 0 {
 		return resp.Fail("project is not exist")
 	}
@@ -88,4 +88,19 @@ func Auth(r *ghttp.Request, bean api.ConfigBean) resp.Resp {
 	}
 
 	return resp.Succ("")
+}
+
+func getPublicCache(r *ghttp.Request) config.TbProject {
+	resp := cache.GetMap(constants.CacheProjectInfoKey)
+	var project config.TbProject
+	if resp.Success() {
+		project = config.TbProject{}
+		gconv.Struct(resp.Data, &project)
+	} else {
+		form := base.NewForm(r.GetMap())
+		project = config.TbProject{}.GetOne(&form)
+		cache.SetexMap(constants.CacheProjectInfoKey+project.Name, gconv.Map(project), constants.CacheTimeOut)
+	}
+
+	return project
 }

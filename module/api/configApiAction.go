@@ -2,11 +2,14 @@ package api
 
 import (
 	"gcs/module/config"
+	"gcs/module/constants"
 	"gcs/utils/base"
+	"gcs/utils/cache"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/util/gconv"
 )
 
 type ConfigBean struct {
@@ -26,9 +29,7 @@ type ConfigApiAction struct {
 
 // path: /version
 func (action *ConfigApiAction) Version(r *ghttp.Request) {
-	form := base.NewForm(r.GetMap())
-
-	model := config.TbConfigPublic{}.GetOne(&form)
+	model := action.getModel(r)
 	if model.Id <= 0 {
 		base.Fail(r, " get version fail")
 	}
@@ -40,9 +41,7 @@ func (action *ConfigApiAction) Version(r *ghttp.Request) {
 
 // path: /data
 func (action *ConfigApiAction) Data(r *ghttp.Request) {
-	form := base.NewForm(r.GetMap())
-
-	model := config.TbConfigPublic{}.GetOne(&form)
+	model := action.getModel(r)
 	if model.Id <= 0 {
 		base.Fail(r, " get version fail")
 	}
@@ -58,4 +57,19 @@ func (action *ConfigApiAction) Data(r *ghttp.Request) {
 		"version": model.Version,
 		"content": dataList.ToArray(),
 	})
+}
+
+func (action *ConfigApiAction) getModel(r *ghttp.Request) config.TbConfigPublic {
+	resp := cache.GetMap(constants.CachePublicDataKey)
+	var model config.TbConfigPublic
+	if resp.Success() {
+		model = config.TbConfigPublic{}
+		gconv.Struct(resp.Data, &model)
+	} else {
+		form := base.NewForm(r.GetMap())
+		model = config.TbConfigPublic{}.GetOne(&form)
+		cache.SetexMap(constants.CachePublicDataKey, gconv.Map(model), constants.CacheTimeOut)
+	}
+
+	return model
 }

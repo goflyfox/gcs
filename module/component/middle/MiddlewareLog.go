@@ -16,7 +16,8 @@ func MiddlewareLog(r *ghttp.Request) {
 	var params map[string]interface{}
 	var no string
 
-	if constants.DEBUG {
+	debug := constants.DEBUG
+	if debug {
 		beforeTime = gtime.Millisecond()
 
 		if r.IsFileRequest() {
@@ -44,7 +45,7 @@ func MiddlewareLog(r *ghttp.Request) {
 	r.Middleware.Next()
 
 	// 青牛完成
-	if constants.DEBUG {
+	if debug {
 		data := string(r.Response.Buffer())
 		if r.URL.Path == "" || r.URL.Path == "/" || gstr.Contains(
 			r.URL.Path, "index") || gstr.Contains(

@@ -1,9 +1,11 @@
 package config
 
 import (
+	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils"
 	"gcs/utils/base"
+	"gcs/utils/cache"
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
@@ -147,6 +149,9 @@ func (action *ConfigPublicAction) Save(r *ghttp.Request) {
 		model.CreateId = userId
 		model.CreateTime = utils.GetNow()
 		num = model.Insert()
+		// 添加接口缓存
+		cache.SetexMap(constants.CachePublicDataKey, gconv.Map(model), constants.CacheTimeOut)
+
 	} else {
 		num = model.Update()
 	}
