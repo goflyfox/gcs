@@ -27,7 +27,9 @@ type ConfigApiAction struct {
 // path: /version
 func (action *ConfigApiAction) Version(r *ghttp.Request) {
 	form := base.NewForm(r.GetMap())
-	model := config.TbConfigPublic{}.GetCacheModel(&form)
+
+	model := config.TbConfigPublic{}
+	model = model.GetCacheModel(&form)
 	if model.Id <= 0 {
 		base.Fail(r, " get version fail")
 	}
@@ -40,7 +42,9 @@ func (action *ConfigApiAction) Version(r *ghttp.Request) {
 // path: /data
 func (action *ConfigApiAction) Data(r *ghttp.Request) {
 	form := base.NewForm(r.GetMap())
-	model := config.TbConfigPublic{}.GetCacheModel(&form)
+
+	model := config.TbConfigPublic{}
+	model = model.GetCacheModel(&form)
 	if model.Id <= 0 {
 		base.Fail(r, " get version fail")
 	}
