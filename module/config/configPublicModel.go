@@ -4,6 +4,7 @@ import (
 	"gcs/module/constants"
 	"gcs/module/system"
 	"gcs/utils/base"
+	"gcs/utils/cache"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/glog"
@@ -206,6 +207,20 @@ func (model *TbConfigPublic) Insert() int64 {
 
 	system.LogSave(model, system.INSERT)
 	return res
+}
+
+func (model *TbConfigPublic) GetCacheModel(form *base.BaseForm) TbConfigPublic {
+	resp := cache.GetMap(constants.CachePublicDataKey)
+	var publicModel TbConfigPublic
+	if resp.Success() {
+		publicModel = TbConfigPublic{}
+		gconv.Struct(resp.Data, &publicModel)
+	} else {
+		publicModel = TbConfigPublic{}.GetOne(form)
+		cache.SetexMap(constants.CachePublicDataKey, gconv.Map(publicModel), constants.CacheTimeOut)
+	}
+
+	return publicModel
 }
 
 func (model TbConfigPublic) dbModel(alias ...string) *gdb.Model {

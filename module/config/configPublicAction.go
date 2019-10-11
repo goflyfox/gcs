@@ -163,6 +163,39 @@ func (action *ConfigPublicAction) Save(r *ghttp.Request) {
 	base.Succ(r, "")
 }
 
+// path: /rollback
+func (action *ConfigPublicAction) Rollback(r *ghttp.Request) {
+	id := r.GetInt("id")
+	userId := base.GetUser(r).Id
+	now := utils.GetNow()
+
+	// 最新数据
+	form := base.NewForm(r.GetPostMap())
+	form.OrderBy = "id desc"
+	firstModel := TbConfigPublic{Id: id}.GetOne(&form)
+	if firstModel.Id == id {
+		base.Fail(r, "已是最新数据，无需回退")
+	}
+
+	model := TbConfigPublic{Id: id}.Get()
+	model.Version = gtime.Now().Format("YmdHisu")
+	model.UpdateId = userId
+	model.UpdateTime = now
+	model.CreateId = userId
+	model.CreateTime = now
+	model.Id = 0
+	num := model.Insert()
+
+	if num <= 0 {
+		base.Fail(r, actionNameConfigPublic+" save fail")
+	}
+
+	// 添加接口缓存
+	cache.SetexMap(constants.CachePublicDataKey, gconv.Map(model), constants.CacheTimeOut)
+
+	base.Succ(r, "")
+}
+
 // path: /list
 func (action *ConfigPublicAction) List(r *ghttp.Request) {
 	form := base.NewForm(r.GetPostMap())

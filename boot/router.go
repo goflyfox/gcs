@@ -75,6 +75,7 @@ func bindRouter() {
 		g.ALL(urlPath+"/configpublic", configPublicAction)
 		g.GET(urlPath+"/configpublic/get/{id}", configPublicAction, "Get")
 		g.ALL(urlPath+"/configpublic/delete/{id}", configPublicAction, "Delete")
+		g.ALL(urlPath+"/configpublic/rollback/{id}", configPublicAction, "Rollback")
 	})
 
 	// 启动gtoken

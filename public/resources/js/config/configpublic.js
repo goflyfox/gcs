@@ -94,6 +94,26 @@ var vm = new Vue({
                 });
             });
         },
+        rollback: function (id) {
+            var id = id || null;
+            if (id == null) {
+                Alert('请选择回退数据');
+                return;
+            }
+
+            Confirm('确定要回滚到选中的记录？', function () {
+                var url = dudu.ctx + "/admin/configpublic/rollback/" + id;
+                dudu.post(url, {}, function (result) {
+                    if (result.code === 0) {
+                        Alert('操作成功', function (index) {
+                            vm.reload();
+                        });
+                    } else {
+                        ErrorInfo(result.msg);
+                    }
+                });
+            });
+        },
         reload: function () {
             vm.showList = true;
             vm.showEdit = false;
