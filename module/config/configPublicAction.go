@@ -82,6 +82,8 @@ func (action *ConfigPublicAction) Project(r *ghttp.Request) {
 			"value":     data.Value,
 			"code":      data.Code,
 			"parentKey": data.ParentKey,
+			"sort":      data.Sort,
+			"projectId": data.ProjectId,
 		})
 	}
 	srcConfigStr, _ := gjson.Encode(dataList)
@@ -141,6 +143,8 @@ func (action *ConfigPublicAction) Save(r *ghttp.Request) {
 				"value":     data.Value,
 				"code":      data.Code,
 				"parentKey": data.ParentKey,
+				"sort":      data.Sort,
+				"projectId": data.ProjectId,
 			})
 		}
 
