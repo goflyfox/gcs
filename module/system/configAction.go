@@ -71,6 +71,11 @@ func (action *ConfigAction) Save(r *ghttp.Request) {
 	model.UpdateId = userId
 	model.UpdateTime = utils.GetNow()
 
+	if model.ParentId > 0 {
+		parentModel := SysConfig{Id: model.ParentId}.Get()
+		model.ParentKey = parentModel.Key
+	}
+
 	var num int64
 	if model.Id <= 0 {
 		userId := base.GetUser(r).Id
