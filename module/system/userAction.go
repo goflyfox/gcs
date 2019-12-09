@@ -121,7 +121,13 @@ func (action *UserAction) Page(r *ghttp.Request) {
 	model := SysUser{}
 
 	page := model.Page(&form)
-	base.Succ(r, g.Map{"list": page, "form": form})
+	base.Succ(r,
+		g.Map{
+			"page":    form.Page,
+			"rows":    page,
+			"total":   form.TotalPage,
+			"records": form.TotalSize,
+		})
 }
 
 // path: /jqgrid
@@ -196,7 +202,7 @@ func (action *UserAction) Password(r *ghttp.Request) {
 	reqPassword, err := gmd5.Encrypt(password + model.Salt)
 	if err != nil {
 		glog.Error(actionNameUser+" Password error", err)
-		base.Error(r, "Password error")
+		base.Error(r, "密码错误.")
 	}
 
 	if reqPassword != model.Password {
@@ -208,7 +214,7 @@ func (action *UserAction) Password(r *ghttp.Request) {
 	model.Password, err = gmd5.Encrypt(newPassword + model.Salt)
 	if err != nil {
 		glog.Error(actionNameUser+" Password error", err)
-		base.Error(r, "Password error")
+		base.Error(r, "密码错误!")
 	}
 
 	num := model.Update()

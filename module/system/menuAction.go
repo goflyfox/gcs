@@ -45,6 +45,12 @@ func (action *MenuAction) Get(r *ghttp.Request) {
 func (action *MenuAction) Delete(r *ghttp.Request) {
 	id := r.GetInt("id")
 
+	form := base.NewForm(g.Map{"parentId": id})
+	childModel := SysMenu{}.GetOne(&form)
+	if childModel.Id > 0 {
+		base.Fail(r, "请先删除子菜单")
+	}
+
 	model := SysMenu{Id: id}
 	model.UpdateId = base.GetUser(r).Id
 	model.UpdateTime = utils.GetNow()
@@ -87,8 +93,8 @@ func (action *MenuAction) Save(r *ghttp.Request) {
 	base.Succ(r, "")
 }
 
-// path: /list
-func (action *MenuAction) List(r *ghttp.Request) {
+// path: /tree
+func (action *MenuAction) Tree(r *ghttp.Request) {
 	form := base.NewForm(r.GetPostMap())
 	model := SysMenu{}
 
@@ -96,8 +102,8 @@ func (action *MenuAction) List(r *ghttp.Request) {
 	base.Succ(r, list)
 }
 
-// path: /tree
-func (action *MenuAction) Tree(r *ghttp.Request) {
+// path: /list
+func (action *MenuAction) List(r *ghttp.Request) {
 	form := base.NewForm(r.GetPostMap())
 	model := SysMenu{}
 
@@ -111,7 +117,13 @@ func (action *MenuAction) Page(r *ghttp.Request) {
 	model := SysMenu{}
 
 	page := model.Page(&form)
-	base.Succ(r, g.Map{"list": page, "form": form})
+	base.Succ(r,
+		g.Map{
+			"page":    form.Page,
+			"rows":    page,
+			"total":   form.TotalPage,
+			"records": form.TotalSize,
+		})
 }
 
 // path: /jqgrid

@@ -178,13 +178,10 @@ jQuery(function ($) {
             {
                 label: "类型", name: 'parentId', width: 120, sortable: true,
                 formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == 0) {
+                    if (cellvalue == '0' || cellvalue == null) {
                         return '类型'
-                    } else{
-                        return '数据'
                     }
-
-                    return cellvalue;
+                    return "数据";
                 }
             },
             {label: "名称", name: 'name', width: 200, sortable: true},

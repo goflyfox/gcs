@@ -168,7 +168,7 @@ INSERT INTO `sys_log` VALUES (12090, 1, '用户', 'sys_user', 1, '登录', NULL,
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `parentid` int(11) NOT NULL DEFAULT 0 COMMENT '父id',
+  `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '父id',
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '名称/11111',
   `icon` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单图标',
   `urlkey` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单key',

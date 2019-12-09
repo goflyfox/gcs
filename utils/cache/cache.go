@@ -7,6 +7,7 @@ import (
 	"github.com/gogf/gf/os/gcache"
 	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/util/gconv"
+	"time"
 )
 
 const (
@@ -57,7 +58,7 @@ func Setex(cacheKey string, data string, timeout int) resp.Resp {
 	cacheMode := getCacheMode()
 	switch cacheMode {
 	case ModeCache:
-		gcache.Set(cacheKey, data, timeout)
+		gcache.Set(cacheKey, data, gconv.Duration(timeout)*time.Millisecond)
 	case ModeRedis:
 		var err error
 		// 设置redis缓存

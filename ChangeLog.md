@@ -1,5 +1,18 @@
 Change Log 更新说明
 ------------------------------
+## 2019-12-09 v0.2.0
+1. gf版本升级到v1.10.0并且gtoken升级为1.3.7
+2. 升级gtoken v1.3.7
+3. 将原有代码配置改为新版本支持的配置文件形式
+4. 修复菜单和配置管理页面展示问题
+5. 优化前后端分离返回值
+6. 规范sys_menu表父id
+```sql
+ALTER TABLE `sys_menu` 
+CHANGE COLUMN `parentid` `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '父id' AFTER `id`;
+```
+7. 加入树结构层级删除限制
+
 ## 2019-11-12 v0.1.4
 1. gf版本升级到v1.9.10
 

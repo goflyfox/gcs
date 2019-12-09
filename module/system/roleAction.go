@@ -68,9 +68,9 @@ func (action *RoleAction) Save(r *ghttp.Request) {
 	}
 
 	menus := r.GetPostString("menus")
-	if menus == "" {
-		base.Fail(r, "参数错误")
-	}
+	//if menus == "" {
+	//	base.Fail(r, "参数错误")
+	//}
 
 	userId := base.GetUser(r).Id
 
@@ -111,7 +111,13 @@ func (action *RoleAction) Page(r *ghttp.Request) {
 	model := SysRole{}
 
 	page := model.Page(&form)
-	base.Succ(r, g.Map{"list": page, "form": form})
+	base.Succ(r,
+		g.Map{
+			"page":    form.Page,
+			"rows":    page,
+			"total":   form.TotalPage,
+			"records": form.TotalSize,
+		})
 }
 
 // path: /jqgrid

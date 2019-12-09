@@ -1,6 +1,11 @@
 log-path = "./logs"
-http-port = 80
-url-path = ""
+[server]
+    Address          = ":80"
+    ServerRoot       = "public"
+    LogPath          = "./logs"
+    AccessLogEnabled = false
+    ErrorLogEnabled  = true
+    PProfEnabled     = true
 
 # title设置
 [setting]

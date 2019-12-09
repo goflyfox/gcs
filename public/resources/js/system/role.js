@@ -41,7 +41,7 @@ var menuZtree = {
                 var tmp = treeData.data[i];
                 var obj = {
                     id: tmp.id,
-                    pId: tmp.parentid,
+                    pId: tmp.parentId,
                     name: tmp.name,
                     open: (tmp.type == 1) ? true : false // (tmp.parentId == 0)
                 };
@@ -169,7 +169,7 @@ var vm = new Vue({
                 return;
             }
 
-            // 获取选择的菜单
+            //获取选择的菜单
             var nodes = menuZtree.tree.getCheckedNodes(true);
             var menuIdArray = new Array();
             for (var i = 0; i < nodes.length; i++) {
