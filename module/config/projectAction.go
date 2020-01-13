@@ -80,7 +80,7 @@ func (action *ProjectAction) Delete(r *ghttp.Request) {
 // path: /save
 func (action *ProjectAction) Save(r *ghttp.Request) {
 	model := TbProject{}
-	err := gconv.StructDeep(r.GetPostMap(), &model)
+	err := gconv.StructDeep(r.GetMap(), &model)
 	if err != nil {
 		glog.Error(actionNameProject+" save struct error", err)
 		base.Error(r, "save error")
@@ -112,7 +112,7 @@ func (action *ProjectAction) Save(r *ghttp.Request) {
 
 // path: /list
 func (action *ProjectAction) List(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbProject{}
 
 	list := model.List(&form)
@@ -121,7 +121,7 @@ func (action *ProjectAction) List(r *ghttp.Request) {
 
 // path: /page
 func (action *ProjectAction) Page(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbProject{}
 
 	page := model.Page(&form)
@@ -130,7 +130,7 @@ func (action *ProjectAction) Page(r *ghttp.Request) {
 
 // path: /jqgrid
 func (action *ProjectAction) Jqgrid(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbProject{}
 
 	page := model.Page(&form)
@@ -234,7 +234,7 @@ func (action *ProjectAction) User(r *ghttp.Request) {
 		base.Fail(r, "登录异常")
 	}
 
-	projectId := r.GetPostInt("projectId")
+	projectId := r.GetInt("projectId")
 	if projectId == 0 {
 		base.Fail(r, "参数错误")
 	}

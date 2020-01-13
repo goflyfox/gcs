@@ -61,13 +61,13 @@ func (action *RoleAction) Delete(r *ghttp.Request) {
 // path: /save
 func (action *RoleAction) Save(r *ghttp.Request) {
 	model := SysRole{}
-	err := gconv.Struct(r.GetPostMap(), &model)
+	err := gconv.Struct(r.GetMap(), &model)
 	if err != nil {
 		glog.Error(actionNameRole+" save struct error", err)
 		base.Error(r, "save error")
 	}
 
-	menus := r.GetPostString("menus")
+	menus := r.GetString("menus")
 	//if menus == "" {
 	//	base.Fail(r, "参数错误")
 	//}
@@ -98,7 +98,7 @@ func (action *RoleAction) Save(r *ghttp.Request) {
 
 // path: /list
 func (action *RoleAction) List(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := SysRole{}
 
 	list := model.List(&form)
@@ -107,7 +107,7 @@ func (action *RoleAction) List(r *ghttp.Request) {
 
 // path: /page
 func (action *RoleAction) Page(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := SysRole{}
 
 	page := model.Page(&form)
@@ -122,7 +122,7 @@ func (action *RoleAction) Page(r *ghttp.Request) {
 
 // path: /jqgrid
 func (action *RoleAction) Jqgrid(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := SysRole{}
 
 	page := model.Page(&form)
@@ -136,11 +136,11 @@ func (action *RoleAction) Jqgrid(r *ghttp.Request) {
 
 // 角色绑定菜单信息
 func (action *RoleAction) Info(r *ghttp.Request) {
-	roleId := r.GetPostInt("roleId")
+	roleId := r.GetInt("roleId")
 	if roleId == 0 {
 		base.Fail(r, "参数错误")
 	}
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	form.SetParam("roleId", gconv.String(roleId))
 
 	// 选择的列表
@@ -166,8 +166,8 @@ func (action *RoleAction) Info(r *ghttp.Request) {
 
 // 角色绑定菜单
 func (action *RoleAction) MenuSave(r *ghttp.Request) {
-	roleId := r.GetPostInt("roleId")
-	menuIds := r.GetPostString("menuIds")
+	roleId := r.GetInt("roleId")
+	menuIds := r.GetString("menuIds")
 	if roleId == 0 || menuIds == "" {
 		base.Fail(r, "参数错误")
 	}

@@ -30,9 +30,9 @@ func LogBeforeServe(r *ghttp.Request) {
 
 	var params map[string]interface{}
 	if r.Method == "GET" {
-		params = r.GetQueryMap()
+		params = r.GetMap()
 	} else if r.Method == "POST" {
-		params = r.GetPostMap()
+		params = r.GetMap()
 	} else {
 		base.Error(r, "Request Method is ERROR! ")
 		return
@@ -62,9 +62,9 @@ func LogBeforeOutput(r *ghttp.Request) {
 	}
 	var params map[string]interface{}
 	if r.Method == "GET" {
-		params = r.GetQueryMap()
+		params = r.GetMap()
 	} else if r.Method == "POST" {
-		params = r.GetPostMap()
+		params = r.GetMap()
 	} else {
 		r.Response.Writeln("Request Method is ERROR! ")
 		return
@@ -98,9 +98,9 @@ func AuthAfterFunc(r *ghttp.Request, respData resp.Resp) {
 	if !respData.Success() {
 		var params map[string]interface{}
 		if r.Method == "GET" {
-			params = r.GetQueryMap()
+			params = r.GetMap()
 		} else if r.Method == "POST" {
-			params = r.GetPostMap()
+			params = r.GetMap()
 		} else {
 			r.Response.Writeln("Request Method is ERROR! ")
 			return

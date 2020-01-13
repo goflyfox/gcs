@@ -18,4 +18,4 @@ log-path = "./logs"
 
 # 数据库配置
 [database]
-    link = "mysql:root:123456@tcp(127.0.0.1:33306)/gcs"
+    link = "mysql:root:A123456@tcp(127.0.0.1:33306)/gcs"

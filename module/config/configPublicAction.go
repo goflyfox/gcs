@@ -115,7 +115,7 @@ func (action *ConfigPublicAction) Delete(r *ghttp.Request) {
 // path: /save
 func (action *ConfigPublicAction) Save(r *ghttp.Request) {
 	model := TbConfigPublic{}
-	err := gconv.Struct(r.GetPostMap(), &model)
+	err := gconv.Struct(r.GetMap(), &model)
 	if err != nil {
 		glog.Error(actionNameConfigPublic+" save struct error", err)
 		base.Error(r, "save error")
@@ -174,7 +174,7 @@ func (action *ConfigPublicAction) Rollback(r *ghttp.Request) {
 	now := utils.GetNow()
 
 	// 最新数据
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	form.OrderBy = "id desc"
 	firstModel := TbConfigPublic{Id: id}.GetOne(&form)
 	if firstModel.Id == id {
@@ -202,7 +202,7 @@ func (action *ConfigPublicAction) Rollback(r *ghttp.Request) {
 
 // path: /list
 func (action *ConfigPublicAction) List(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbConfigPublic{}
 
 	list := model.List(&form)
@@ -211,7 +211,7 @@ func (action *ConfigPublicAction) List(r *ghttp.Request) {
 
 // path: /page
 func (action *ConfigPublicAction) Page(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbConfigPublic{}
 
 	page := model.Page(&form)
@@ -220,7 +220,7 @@ func (action *ConfigPublicAction) Page(r *ghttp.Request) {
 
 // path: /jqgrid
 func (action *ConfigPublicAction) Jqgrid(r *ghttp.Request) {
-	form := base.NewForm(r.GetPostMap())
+	form := base.NewForm(r.GetMap())
 	model := TbConfigPublic{}
 
 	page := model.Page(&form)
