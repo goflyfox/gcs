@@ -1,4 +1,5 @@
 log-path = "./logs"
+cache-mode = 2
 [server]
     Address          = ":80"
     ServerRoot       = "public"
@@ -13,9 +14,14 @@ log-path = "./logs"
 
 # WebServer管理
 [admin]
-    user = "admin"
-    pass = "123"
+    user = "fulltimelink"
+    pass = "nn5211314"
 
 # 数据库配置
 [database]
-    link = "mysql:root:A123456@tcp(127.0.0.1:33306)/gcs"
+    link = "mysql:zhaijilei:ruyu2AXu2a@tcp(10.1.3.23:3308)/gcs"
+
+# Redis数据库配置
+[redis]
+    default = "redis-hudong-master.general.svc.cluster.local:16379,3,b840fc02d524045429941cc15f59e41c89b7be6c"
+    cache   = "redis-hudong-master.general.svc.cluster.local:16379,4,b840fc02d524045429941cc15f59e41c89b7be6c?idleTimeout=600"

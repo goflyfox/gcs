@@ -18,3 +18,7 @@ pkg
 .idea
 logs
 vendor
+DockerFile
+gcs
+go.sum
+go.mod
