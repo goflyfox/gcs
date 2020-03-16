@@ -68,7 +68,7 @@ func Auth(r *ghttp.Request, bean api.ConfigBean) resp.Resp {
 	}
 	// 1分钟
 	var diffTime float64 = 60
-	if math.Abs(gconv.Float64(gtime.Now().Second()-date.Second())) > diffTime {
+	if math.Abs(gconv.Float64(gtime.Now().Unix()-date.Unix())) > diffTime {
 		return resp.Fail("time gt " + gconv.String(diffTime/60) + " minute (" + bean.No + ")")
 	}
 
