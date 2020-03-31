@@ -1,5 +1,5 @@
 log-path = "./logs"
-cache-mode = 1
+cache-mode = 2
 [server]
     Address          = ":80"
     ServerRoot       = "public"
@@ -19,7 +19,7 @@ cache-mode = 1
 
 # 数据库配置
 [database]
-    link = "mysql:root:A123456@tcp(127.0.0.1:33306)/gcs"
+    link = "mysql:root:123456@tcp(127.0.0.1:3306)/gcs"
 
 # Redis数据库配置
 [redis]

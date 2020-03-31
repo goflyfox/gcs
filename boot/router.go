@@ -20,15 +20,24 @@ import (
 func bindRouter() {
 	urlPath := g.Config().GetString("url-path")
 	s := g.Server()
+
+	// 中间件
+	// 允许跨域
+	s.BindMiddleware("/*", func(r *ghttp.Request) {
+		r.Response.CORSDefault()
+		r.Middleware.Next()
+	})
+	// 日志拦截
+	s.BindMiddleware(urlPath+"/*", middle.MiddlewareLog)
+	// 通用属性
+	s.BindMiddleware(urlPath+"/*", middle.MiddlewareCommon)
+
 	// 首页
 	s.BindHandler(urlPath+"/", common.Login)
 	s.BindHandler(urlPath+"/main.html", common.Index)
 	s.BindHandler(urlPath+"/login", common.Login)
 
 	s.BindHandler(urlPath+"/admin/welcome.html", common.Welcome)
-	// 中间件
-	s.BindMiddleware(urlPath+"/*", middle.MiddlewareLog)
-	s.BindMiddleware(urlPath+"/*", middle.MiddlewareCommon)
 
 	s.Group(urlPath+"/system", func(g *ghttp.RouterGroup) {
 		// 系统路由
@@ -86,6 +95,7 @@ func bindRouter() {
 		LogoutPath:       "/user/logout",
 		LogoutBeforeFunc: common.LogoutBefore,
 		AuthPaths:        g.SliceStr{"/user", "/system", "/admin"},
+		GlobalMiddleware: true,
 		AuthBeforeFunc: func(r *ghttp.Request) bool {
 			// 静态页面不拦截
 			if r.IsFileRequest() {

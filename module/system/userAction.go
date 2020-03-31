@@ -78,8 +78,8 @@ func (action *UserAction) Save(r *ghttp.Request) {
 	if model.Id <= 0 {
 		model.CreateId = userId
 		model.CreateTime = utils.GetNow()
-		model.Uuid = grand.Str(32)
-		model.Salt = grand.Str(6)
+		model.Uuid = grand.Letters(32)
+		model.Salt = grand.Letters(6)
 		if model.Password == "" {
 			tmpStr, err := gmd5.Encrypt("123456")
 			if err != nil {
